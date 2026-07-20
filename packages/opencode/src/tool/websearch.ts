@@ -37,9 +37,9 @@ export function selectWebSearchProvider(sessionID: string, flags = { exa: false,
 }
 
 export function webSearchProviderLabel(provider: unknown) {
-  if (provider === "parallel") return "Parallel Web Search"
+  if (provider === "parallel") return "并行网页搜索"
   if (provider === "exa") return "Exa Web Search"
-  return "Web Search"
+  return "网页搜索"
 }
 
 export function webSearchModelName(extra: Tool.Context["extra"]) {

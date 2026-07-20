@@ -17,7 +17,7 @@ export async function validateSession(input: {
   try {
     sessionID = decodeSessionID(input.sessionID)
   } catch (error) {
-    throw new Error(`Invalid session ID: ${error instanceof Error ? error.message : "unknown error"}`, { cause: error })
+    throw new Error(`无效的会话 ID: ${error instanceof Error ? error.message : "未知错误"}`, { cause: error })
   }
 
   await createOpencodeClient({

@@ -100,7 +100,7 @@ export function RejectField(props: {
       minHeight={1}
       maxHeight={3}
       wrapMode="word"
-      placeholder="Tell OpenCode what to do differently"
+      placeholder="告诉 OpenCode 需要如何调整"
       placeholderColor={props.theme.muted}
       textColor={props.theme.text}
       focusedTextColor={props.theme.text}
@@ -145,14 +145,14 @@ export function RunPermissionBody(props: {
   const busy = createMemo(() => state().submitting)
   const title = createMemo(() => {
     if (state().stage === "always") {
-      return "Always allow"
+      return "始终允许"
     }
 
     if (state().stage === "reject") {
-      return "Reject permission"
+      return "拒绝权限"
     }
 
-    return "Permission required"
+    return "需要权限"
   })
 
   createEffect(() => {
@@ -284,7 +284,7 @@ export function RunPermissionBody(props: {
           </Match>
           <Match when={state().stage === "reject"}>
             <box paddingLeft={1}>
-              <text fg={props.theme.muted}>Tell OpenCode what to do differently</text>
+              <text fg={props.theme.muted}>告诉 OpenCode 需要如何调整</text>
             </box>
           </Match>
         </Switch>

@@ -263,9 +263,7 @@ export function SessionReviewFilePreviewV2(props: SessionReviewFilePreviewV2Prop
             <span data-slot="session-review-v2-file-path">{getDirectory(props.file)}</span>
           </Show>
         </div>
-        <div data-slot="session-review-v2-file-diff">
-          <DiffChanges changes={view()} />
-        </div>
+        <DiffChanges changes={view()} />
       </div>
       <div
         ref={(el) => {

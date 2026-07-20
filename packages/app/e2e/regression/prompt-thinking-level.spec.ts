@@ -54,15 +54,18 @@ test("shows the V2 thinking level control while relevant", async ({ page }) => {
   })
 
   await page.goto(`/${base64Encode(directory)}/session/${sessionID}`)
-  const composer = page.locator('[data-component="prompt-input-v2"]')
+  const composer = page.locator('[data-component="session-composer"]')
   const input = composer.locator('[data-component="prompt-input"]')
-  const control = composer.locator('button[title="Choose model variant"]')
+  const control = composer.locator('[data-component="prompt-variant-control"]')
   await expectAppVisible(composer)
 
   await idleComposer(page)
+  await expect(control).toBeHidden()
+
+  await composer.hover()
   await expect(control).toBeVisible()
 
-  await control.click()
+  await control.locator('[data-action="prompt-model-variant"]').click()
   const high = page.getByRole("menuitemradio", { name: "high" })
   await expect(high).toBeVisible()
   await page.mouse.move(0, 0)

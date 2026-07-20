@@ -74,11 +74,11 @@ export function createPlugTask(input: PlugInput, dep: PlugDeps = defaultPlugDeps
 
   return async (ctx: PlugCtx) => {
     const install = dep.spinner()
-    install.start("Installing plugin package...")
+    install.start("正在安装插件包...")
     const target = await installPlugin(mod, dep)
     if (!target.ok) {
-      install.stop("Install failed", 1)
-      dep.log.error(`Could not install "${mod}"`)
+      install.stop("安装失败", 1)
+      dep.log.error(`无法安装 "${mod}"`)
       const hit = cause(target.error) ?? target.error
       if (hit instanceof Process.RunFailedError) {
         const lines = hit.stderr
@@ -90,8 +90,8 @@ export function createPlugTask(input: PlugInput, dep: PlugDeps = defaultPlugDeps
         const detail = errs[0] ?? lines.at(-1)
         if (detail) dep.log.error(detail)
         if (lines.some((line) => line.includes("No version matching"))) {
-          dep.log.info("This package depends on a version that is not available in your npm registry.")
-          dep.log.info("Check npm registry/auth settings and try again.")
+          dep.log.info("此包依赖的版本在您的 npm registry 中不可用。")
+          dep.log.info("请检查 npm registry/认证设置后重试。")
         }
       }
       if (!(hit instanceof Process.RunFailedError)) {
@@ -99,14 +99,14 @@ export function createPlugTask(input: PlugInput, dep: PlugDeps = defaultPlugDeps
       }
       return false
     }
-    install.stop("Plugin package ready")
+    install.stop("插件包已就绪")
 
     const inspect = dep.spinner()
-    inspect.start("Reading plugin manifest...")
+    inspect.start("读取插件清单...")
     const manifest = await readPluginManifest(target.target)
     if (!manifest.ok) {
       if (manifest.code === "manifest_read_failed") {
-        inspect.stop("Manifest read failed", 1)
+        inspect.stop("清单读取失败", 1)
         dep.log.error(`Installed "${mod}" but failed to read ${manifest.file}`)
         dep.log.error(errorMessage(cause(manifest.error) ?? manifest.error))
         return false
@@ -121,7 +121,7 @@ export function createPlugTask(input: PlugInput, dep: PlugDeps = defaultPlugDeps
         return false
       }
 
-      inspect.stop("Manifest read failed", 1)
+      inspect.stop("清单读取失败", 1)
       return false
     }
 
@@ -130,7 +130,7 @@ export function createPlugTask(input: PlugInput, dep: PlugDeps = defaultPlugDeps
     )
 
     const patch = dep.spinner()
-    patch.start("Updating plugin config...")
+    patch.start("更新插件配置...")
     const out = await patchPluginConfig(
       {
         spec: mod,
@@ -146,30 +146,30 @@ export function createPlugTask(input: PlugInput, dep: PlugDeps = defaultPlugDeps
     )
     if (!out.ok) {
       if (out.code === "invalid_json") {
-        patch.stop(`Failed updating ${out.kind} config`, 1)
+        patch.stop(`更新 ${out.kind} 配置失败`, 1)
         dep.log.error(`Invalid JSON in ${out.file} (${out.parse} at line ${out.line}, column ${out.col})`)
-        dep.log.info("Fix the config file and run the command again.")
+        dep.log.info("请修复配置文件后重新运行命令。")
         return false
       }
 
-      patch.stop("Failed updating plugin config", 1)
+      patch.stop("更新插件配置失败", 1)
       dep.log.error(errorMessage(out.error))
       return false
     }
-    patch.stop("Plugin config updated")
+    patch.stop("插件配置已更新")
     for (const item of out.items) {
       if (item.mode === "noop") {
-        dep.log.info(`Already configured in ${item.file}`)
+        dep.log.info(`已在 ${item.file} 中配置`)
         continue
       }
       if (item.mode === "replace") {
-        dep.log.info(`Replaced in ${item.file}`)
+        dep.log.info(`已在 ${item.file} 中替换`)
         continue
       }
-      dep.log.info(`Added to ${item.file}`)
+      dep.log.info(`已添加到 ${item.file}`)
     }
 
-    dep.log.success(`Installed ${mod}`)
+    dep.log.success(`已安装 ${mod}`)
     dep.log.info(global ? `Scope: global (${out.dir})` : `Scope: local (${out.dir})`)
     return true
   }
@@ -178,24 +178,24 @@ export function createPlugTask(input: PlugInput, dep: PlugDeps = defaultPlugDeps
 export const PluginCommand = effectCmd({
   command: "plugin <module>",
   aliases: ["plug"],
-  describe: "install plugin and update config",
+  describe: "安装插件并更新配置",
   builder: (yargs) =>
     yargs
       .positional("module", {
         type: "string",
-        describe: "npm module name",
+        describe: "npm 模块名称",
       })
       .option("global", {
         alias: ["g"],
         type: "boolean",
         default: false,
-        describe: "install in global config",
+        describe: "安装到全局配置",
       })
       .option("force", {
         alias: ["f"],
         type: "boolean",
         default: false,
-        describe: "replace existing plugin version",
+        describe: "替换已有插件版本",
       }),
   handler: Effect.fn("Cli.plug")(function* (args) {
     const mod = String(args.module ?? "").trim()
@@ -206,7 +206,7 @@ export const PluginCommand = effectCmd({
     }
 
     UI.empty()
-    intro(`Install plugin ${mod}`)
+    intro(`安装插件 ${mod}`)
 
     const run = createPlugTask({
       mod,
@@ -224,7 +224,7 @@ export const PluginCommand = effectCmd({
       }),
     )
 
-    outro("Done")
+    outro("完成")
     if (!ok) process.exitCode = 1
   }),
 })

@@ -340,7 +340,7 @@ async function startOAuthServer(): Promise<{ port: number; redirectUri: string }
       }
 
       if (!code) {
-        const errorMsg = "Missing authorization code"
+        const errorMsg = "缺少授权码"
         pendingOAuth?.reject(new Error(errorMsg))
         pendingOAuth = undefined
         res.writeHead(400, { "Content-Type": "text/html" })
@@ -349,7 +349,7 @@ async function startOAuthServer(): Promise<{ port: number; redirectUri: string }
       }
 
       if (!pendingOAuth || state !== pendingOAuth.state) {
-        const errorMsg = "Invalid state - potential CSRF attack"
+        const errorMsg = "状态无效 - 可能存在 CSRF 攻击"
         pendingOAuth?.reject(new Error(errorMsg))
         pendingOAuth = undefined
         res.writeHead(400, { "Content-Type": "text/html" })
@@ -370,15 +370,15 @@ async function startOAuthServer(): Promise<{ port: number; redirectUri: string }
     }
 
     if (url.pathname === "/cancel") {
-      pendingOAuth?.reject(new Error("Login cancelled"))
+      pendingOAuth?.reject(new Error("登录已取消"))
       pendingOAuth = undefined
       res.writeHead(200)
-      res.end("Login cancelled")
+      res.end("登录已取消")
       return
     }
 
     res.writeHead(404)
-    res.end("Not found")
+    res.end("未找到")
   })
 
   // listen() failures (e.g. EADDRINUSE because Grok-CLI is bound to the same
@@ -420,7 +420,7 @@ function waitForOAuthCallback(pkce: PkceCodes, state: string): Promise<TokenResp
   // it eagerly so its caller stops waiting on a state value that can never
   // match the next callback.
   if (pendingOAuth) {
-    pendingOAuth.reject(new Error("Superseded by a newer xAI authorize request"))
+    pendingOAuth.reject(new Error("已被更新的 xAI 授权请求取代"))
     pendingOAuth = undefined
   }
   return new Promise((resolve, reject) => {
@@ -549,7 +549,7 @@ export async function XaiAuthPlugin(input: PluginInput, options: XaiAuthPluginOp
       },
       methods: [
         {
-          label: "xAI Grok OAuth (SuperGrok Subscription)",
+          label: "xAI Grok OAuth（SuperGrok 订阅）",
           type: "oauth",
           authorize: async () => {
             await startOAuthServer()
@@ -562,7 +562,7 @@ export async function XaiAuthPlugin(input: PluginInput, options: XaiAuthPluginOp
 
             return {
               url: authUrl,
-              instructions: "Complete authorization in your browser. This window will close automatically.",
+              instructions: "在浏览器中完成授权。此窗口将自动关闭。",
               method: "auto" as const,
               callback: async () => {
                 try {
@@ -591,7 +591,7 @@ export async function XaiAuthPlugin(input: PluginInput, options: XaiAuthPluginOp
           // user's browser. Defends the only attack surface (the polling
           // loop) with the standard authorization_pending / slow_down
           // backoff and a hard deadline from xAI's `expires_in`.
-          label: "xAI Grok OAuth (Headless / Remote / VPS)",
+          label: "xAI Grok OAuth（无头 / 远程 / VPS）",
           type: "oauth",
           authorize: async () => {
             const device = await requestDeviceCode(options)
@@ -617,7 +617,7 @@ export async function XaiAuthPlugin(input: PluginInput, options: XaiAuthPluginOp
           },
         },
         {
-          label: "Manually enter API Key",
+          label: "手动输入 API 密钥",
           type: "api",
         },
       ],

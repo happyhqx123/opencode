@@ -188,13 +188,13 @@ export function parseRemoteRepositoryReference(input: string) {
   if (!reference) {
     throw new InvalidRepositoryReferenceError({
       repository: input,
-      message: "Repository must be a git URL, host/path reference, or GitHub owner/repo shorthand",
+      message: "仓库必须是 git URL、主机/路径引用或 GitHub owner/repo 简写",
     })
   }
   if (!isRemoteRepositoryReference(reference)) {
     throw new UnsupportedLocalRepositoryError({
       repository: input,
-      message: "Local file repositories are not supported",
+      message: "不支持本地文件仓库",
     })
   }
   return reference

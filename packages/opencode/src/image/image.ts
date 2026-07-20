@@ -17,7 +17,7 @@ export class ResizerUnavailableError extends Schema.TaggedErrorClass<ResizerUnav
   {},
 ) {
   override get message() {
-    return "Image resizer is unavailable"
+    return "图片缩放功能不可用"
   }
 }
 
@@ -25,13 +25,13 @@ export class InvalidDataUrlError extends Schema.TaggedErrorClass<InvalidDataUrlE
   url: Schema.String,
 }) {
   override get message() {
-    return "Image URL must be a base64 data URL"
+    return "图片 URL 必须是 base64 数据 URL"
   }
 }
 
 export class DecodeError extends Schema.TaggedErrorClass<DecodeError>()("ImageDecodeError", {}) {
   override get message() {
-    return "Image could not be decoded"
+    return "无法解码图片"
   }
 }
 

@@ -182,39 +182,39 @@ export async function CopilotAuthPlugin(input: PluginInput): Promise<Hooks> {
       methods: [
         {
           type: "oauth",
-          label: "Login with GitHub Copilot",
+          label: "通过 GitHub Copilot 登录",
           prompts: [
             {
               type: "select",
               key: "deploymentType",
-              message: "Select GitHub deployment type",
+              message: "选择 GitHub 部署类型",
               options: [
                 {
                   label: "GitHub.com",
                   value: "github.com",
-                  hint: "Public",
+                  hint: "公共",
                 },
                 {
-                  label: "GitHub Enterprise",
+                  label: "GitHub 企业版",
                   value: "enterprise",
-                  hint: "Data residency or self-hosted",
+                  hint: "数据驻留或自托管",
                 },
               ],
             },
             {
               type: "text",
               key: "enterpriseUrl",
-              message: "Enter your GitHub Enterprise URL or domain",
+              message: "输入 GitHub Enterprise URL 或域名",
               placeholder: "company.ghe.com or https://company.ghe.com",
               when: { key: "deploymentType", op: "eq", value: "enterprise" },
               validate: (value) => {
-                if (!value) return "URL or domain is required"
+                if (!value) return "URL 或域名为必填项"
                 try {
                   const url = value.includes("://") ? new URL(value) : new URL(`https://${value}`)
-                  if (!url.hostname) return "Please enter a valid URL or domain"
+                  if (!url.hostname) return "请输入有效的 URL 或域名"
                   return undefined
                 } catch {
-                  return "Please enter a valid URL (e.g., company.ghe.com or https://company.ghe.com)"
+                  return "请输入有效的 URL（例如 company.ghe.com 或 https://company.ghe.com）"
                 }
               },
             },
@@ -245,7 +245,7 @@ export async function CopilotAuthPlugin(input: PluginInput): Promise<Hooks> {
             })
 
             if (!deviceResponse.ok) {
-              throw new Error("Failed to initiate device authorization")
+              throw new Error("无法启动设备授权")
             }
 
             const deviceData = (await deviceResponse.json()) as {
@@ -257,7 +257,7 @@ export async function CopilotAuthPlugin(input: PluginInput): Promise<Hooks> {
 
             return {
               url: deviceData.verification_uri,
-              instructions: `Enter code: ${deviceData.user_code}`,
+              instructions: `输入代码：${deviceData.user_code}`,
               method: "auto" as const,
               async callback() {
                 while (true) {
@@ -346,7 +346,7 @@ export async function CopilotAuthPlugin(input: PluginInput): Promise<Hooks> {
       }
 
       // GitHub Copilot's /v1/messages shim rejects the GA `eager_input_streaming`
-      // field on tool definitions ("Extra inputs are not permitted"). Opt out of
+      // field on tool definitions ("不允许额外输入"). Opt out of
       // the @ai-sdk/anthropic default so it stops injecting the field.
       if (incoming.model.api.npm === "@ai-sdk/anthropic") {
         output.options.toolStreaming = false

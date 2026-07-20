@@ -120,14 +120,14 @@ async function exchangeCodeForToken(account: string, code: string, pkce: PkceCod
 
   if (!response.ok) {
     const detail = await response.text().catch(() => "")
-    throw new Error(`Snowflake token exchange failed (${response.status})${detail ? `: ${detail}` : ""}`)
+    throw new Error(`Snowflake 令牌交换失败 (${response.status})${detail ? `: ${detail}` : ""}`)
   }
 
   const token = (await response.json()) as TokenResponse
-  if (!token.access_token) throw new Error("Snowflake token response did not include access_token")
+  if (!token.access_token) throw new Error("Snowflake 令牌响应未包含 access_token")
   if (!token.refresh_token) {
     throw new Error(
-      "Snowflake token response did not include refresh_token. Ensure integration issues refresh tokens and scope includes refresh_token.",
+      "Snowflake 令牌响应未包含 refresh_token。请确保集成已配置为颁发刷新令牌，且 scope 包含 refresh_token。",
     )
   }
   return token
@@ -149,11 +149,11 @@ async function refreshAccessToken(account: string, refreshToken: string) {
 
   if (!response.ok) {
     const detail = await response.text().catch(() => "")
-    throw new Error(`Snowflake token refresh failed (${response.status})${detail ? `: ${detail}` : ""}`)
+    throw new Error(`Snowflake 令牌刷新失败 (${response.status})${detail ? `: ${detail}` : ""}`)
   }
 
   const token = (await response.json()) as TokenResponse
-  if (!token.access_token) throw new Error("Snowflake refresh response did not include access_token")
+  if (!token.access_token) throw new Error("Snowflake 刷新响应未包含 access_token")
   return token
 }
 
@@ -166,7 +166,7 @@ async function startOAuthServer() {
 
     if (url.pathname !== OAUTH_CALLBACK_PATH) {
       res.writeHead(404)
-      res.end("Not found")
+      res.end("未找到")
       return
     }
 
@@ -177,7 +177,7 @@ async function startOAuthServer() {
 
     // CSRF guard: validate state before processing any callback
     if (!pendingOAuth || state !== pendingOAuth.state) {
-      const message = "Invalid state - potential CSRF attack"
+      const message = "状态无效 - 可能存在 CSRF 攻击"
       pendingOAuth?.reject(new Error(message))
       pendingOAuth = undefined
       res.writeHead(400, { "Content-Type": "text/html" })
@@ -197,7 +197,7 @@ async function startOAuthServer() {
     }
 
     if (!code) {
-      const message = "Missing authorization code"
+      const message = "缺少授权码"
       current.reject(new Error(message))
       res.writeHead(400, { "Content-Type": "text/html" })
       res.end(OauthCallbackPage.error(message, { provider: "Snowflake" }))
@@ -216,7 +216,7 @@ async function startOAuthServer() {
     oauthServer!.listen(0, OAUTH_CALLBACK_HOST, () => {
       const address = oauthServer!.address()
       if (!address || typeof address === "string") {
-        reject(new Error("Unable to resolve Snowflake OAuth callback port"))
+        reject(new Error("无法解析 Snowflake OAuth callback port"))
         return
       }
       oauthServerPort = address.port
@@ -235,7 +235,7 @@ function stopOAuthServer() {
 
 function waitForOAuthCallback(account: string, pkce: PkceCodes, state: string): Promise<TokenResponse> {
   if (pendingOAuth) {
-    pendingOAuth.reject(new Error("Superseded by a newer Snowflake authorize request"))
+    pendingOAuth.reject(new Error("已被更新的 Snowflake 授权请求取代"))
     pendingOAuth = undefined
   }
 
@@ -268,14 +268,14 @@ export async function SnowflakeCortexAuthPlugin(_input: PluginInput): Promise<Ho
     {
       type: "text" as const,
       key: "account",
-      message: "Snowflake Account Identifier",
+      message: "Snowflake 账户标识符",
       placeholder: "myorg-myaccount",
       validate: (value: string) => (value && value.trim().length > 0 ? undefined : "Required"),
     },
     {
       type: "text" as const,
       key: "role",
-      message: "Snowflake Role (optional)",
+      message: "Snowflake 角色（可选）",
       placeholder: "PUBLIC",
     },
   ]
@@ -458,11 +458,11 @@ export async function SnowflakeCortexAuthPlugin(_input: PluginInput): Promise<Ho
       methods: [
         {
           type: "oauth",
-          label: "Login with Snowflake (External Browser)",
+          label: "通过 Snowflake 登录（外部浏览器）",
           prompts,
           async authorize(inputs = {}) {
             const account = normalizeAccount(inputs.account || "")
-            if (!account) throw new Error("Snowflake account is required")
+            if (!account) throw new Error("Snowflake 账户为必填项")
 
             await startOAuthServer()
             const pkce = await generatePKCE()
@@ -498,7 +498,7 @@ export async function SnowflakeCortexAuthPlugin(_input: PluginInput): Promise<Ho
         },
         {
           type: "api",
-          label: "Paste PAT or bearer token manually",
+          label: "手动粘贴 PAT 或 bearer token",
           prompts: prompts.filter((item) => item.key === "account"),
         },
       ],

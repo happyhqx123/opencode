@@ -195,7 +195,7 @@ function routeWorkspace<E>(
       Effect.succeed(
         HttpServerResponse.jsonUnsafe(
           new InvalidRequestError({
-            message: "Invalid workspace query parameter",
+            message: "无效的工作区查询参数",
             kind: "Query",
             field: "workspace",
           }),

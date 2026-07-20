@@ -125,7 +125,7 @@ async function toolError(part: ToolPart) {
 
 export const RunCommand = effectCmd({
   command: "run [message..]",
-  describe: "run opencode with a message",
+  describe: "用消息运行 opencode",
   // --attach connects to a remote server (no local instance needed); the
   // default path runs an in-process server and needs the project instance.
   instance: (args) => !args.attach,
@@ -135,87 +135,87 @@ export const RunCommand = effectCmd({
   builder: (yargs: Argv) =>
     yargs
       .positional("message", {
-        describe: "message to send",
+        describe: "要发送的消息",
         type: "string",
         array: true,
         default: [],
       })
       .option("command", {
-        describe: "the command to run, use message for args",
+        describe: "要运行的命令，使用 message 传递参数",
         type: "string",
       })
       .option("continue", {
         alias: ["c"],
-        describe: "continue the last session",
+        describe: "继续上一次会话",
         type: "boolean",
       })
       .option("session", {
         alias: ["s"],
-        describe: "session id to continue",
+        describe: "要继续的会话 ID",
         type: "string",
       })
       .option("fork", {
-        describe: "fork the session before continuing (requires --continue or --session)",
+        describe: "继续前分叉会话（需要 --continue 或 --session）",
         type: "boolean",
       })
       .option("share", {
         type: "boolean",
-        describe: "share the session",
+        describe: "分享会话",
       })
       .option("model", {
         type: "string",
         alias: ["m"],
-        describe: "model to use in the format of provider/model",
+        describe: "使用的模型，格式为 provider/model",
       })
       .option("agent", {
         type: "string",
-        describe: "agent to use",
+        describe: "要使用的智能体",
       })
       .option("format", {
         type: "string",
         choices: ["default", "json"],
         default: "default",
-        describe: "format: default (formatted) or json (raw JSON events)",
+        describe: "格式：default（格式化）或 json（原始 JSON 事件）",
       })
       .option("file", {
         alias: ["f"],
         type: "string",
         array: true,
-        describe: "file(s) to attach to message",
+        describe: "附加到消息的文件",
       })
       .option("title", {
         type: "string",
-        describe: "title for the session (uses truncated prompt if no value provided)",
+        describe: "会话标题（如未提供则使用截断的提示词）",
       })
       .option("attach", {
         type: "string",
-        describe: "attach to a running opencode server (e.g., http://localhost:4096)",
+        describe: "连接到运行中的 opencode 服务器（例如 http://localhost:4096）",
       })
       .option("password", {
         alias: ["p"],
         type: "string",
-        describe: "basic auth password (defaults to OPENCODE_SERVER_PASSWORD)",
+        describe: "基本认证密码（默认为 OPENCODE_SERVER_PASSWORD）",
       })
       .option("username", {
         alias: ["u"],
         type: "string",
-        describe: "basic auth username (defaults to OPENCODE_SERVER_USERNAME or 'opencode')",
+        describe: "基本认证用户名（默认为 OPENCODE_SERVER_USERNAME 或 'opencode'）",
       })
       .option("dir", {
         type: "string",
-        describe: "directory to run in, path on remote server if attaching",
+        describe: "运行目录，连接时为远程服务器路径",
       })
       .option("port", {
         type: "number",
-        describe: "port for the local server (defaults to random port if no value provided)",
+        describe: "本地服务器端口（如未提供则随机分配）",
       })
       .option("variant", {
         type: "string",
-        describe: "model variant (provider-specific reasoning effort, e.g., high, max, minimal)",
+        describe: "模型变体（提供商特定的推理力度，如 high、max、minimal）",
       })
       .option("thinking", {
         type: "boolean",
-        describe: "show thinking blocks",
+        describe: "显示思考块",
       })
       .option("mini", {
         type: "boolean",
@@ -226,22 +226,22 @@ export const RunCommand = effectCmd({
         type: "boolean",
         default: true,
         hidden: true,
-        describe: "replay interactive session history on resume and after resize (use --no-replay to disable)",
+        describe: "在恢复和调整大小后重放交互式会话历史（使用 --no-replay 禁用）",
       })
       .option("replay-limit", {
         type: "number",
         hidden: true,
-        describe: "cap visible interactive replay to the newest N messages",
+        describe: "将可见交互式回放限制为最新的 N 条消息",
       })
       .option("interactive", {
         alias: ["i"],
         type: "boolean",
-        describe: "run in direct interactive split-footer mode",
+        describe: "在直接交互分页模式下运行",
         default: false,
       })
       .option("auto", {
         type: "boolean",
-        describe: "auto-approve permissions that are not explicitly denied (dangerous!)",
+        describe: "自动批准未明确拒绝的权限（危险！）",
         default: false,
       })
       .option("yolo", {
@@ -258,7 +258,7 @@ export const RunCommand = effectCmd({
         type: "boolean",
         default: false,
         hidden: true,
-        describe: "enable direct interactive demo slash commands; pass one as the message to run it immediately",
+        describe: "启用直接交互演示斜杠命令；传递一个作为消息立即运行",
       }),
   handler: Effect.fn("Cli.run")(function* (args) {
     const { Agent } = yield* Effect.promise(() => import("@/agent/agent"))
@@ -339,7 +339,7 @@ export const RunCommand = effectCmd({
           process.chdir(path.isAbsolute(args.dir) ? args.dir : path.join(root, args.dir))
           return process.cwd()
         } catch {
-          UI.error("Failed to change directory to " + args.dir)
+          UI.error("无法切换到目录 " + args.dir)
           process.exit(1)
         }
       })()
@@ -361,14 +361,14 @@ export const RunCommand = effectCmd({
         for (const filePath of list) {
           const resolvedPath = path.resolve(args.attach ? root : (directory ?? root), filePath)
           if (!(await Filesystem.exists(resolvedPath))) {
-            UI.error(`File not found: ${filePath}`)
+            UI.error(`文件未找到: ${filePath}`)
             process.exit(1)
           }
 
           const stat = Filesystem.stat(resolvedPath)
           const isDirectory = stat?.isDirectory() ?? false
           if (args.attach && isDirectory) {
-            UI.error(`Cannot attach local directory without a shared filesystem: ${filePath}`)
+            UI.error(`无法附加本地目录（缺少共享文件系统）: ${filePath}`)
             process.exit(1)
           }
 
@@ -378,7 +378,7 @@ export const RunCommand = effectCmd({
             try {
               const opened = await handle.stat()
               if (!opened.isFile() || Number(opened.size) > ATTACH_FILE_MAX_BYTES) {
-                UI.error(`Cannot attach local file larger than 10 MiB or a special file: ${filePath}`)
+                UI.error(`无法附加本地文件（大于 10 MiB 或为特殊文件）: ${filePath}`)
                 process.exit(1)
               }
               if (opened.size === 0) return Buffer.alloc(0)
@@ -418,7 +418,7 @@ export const RunCommand = effectCmd({
       const initialInput = resolveRunInput(rawMessage, piped)
 
       if (message.trim().length === 0 && !args.command && !interactive) {
-        UI.error("You must provide a message or a command")
+        UI.error("您必须提供消息或命令")
         process.exit(1)
       }
 
@@ -462,7 +462,7 @@ export const RunCommand = effectCmd({
             .catch(() => undefined)
 
           if (!current?.data) {
-            UI.error("Session not found")
+            UI.error("未找到会话")
             process.exit(1)
           }
 
@@ -565,7 +565,7 @@ export const RunCommand = effectCmd({
         })
         const id = result.data?.id
         if (!id) {
-          throw new Error("Failed to create session")
+          throw new Error("创建会话失败")
         }
 
         void share(sdk, id).catch(() => {})
@@ -588,7 +588,7 @@ export const RunCommand = effectCmd({
           return next
         }
 
-        UI.error("Failed to resolve remote directory")
+        UI.error("解析远程目录失败")
         process.exit(1)
       }
 
@@ -670,7 +670,7 @@ export const RunCommand = effectCmd({
       async function execute(sdk: OpencodeClient) {
         const sess = await session(sdk)
         if (!sess?.id) {
-          UI.error("Session not found")
+          UI.error("未找到会话")
           process.exit(1)
         }
         const sessionID = sess.id
@@ -975,7 +975,7 @@ type MiniCommandInput = {
 }
 
 export async function runMini(input: MiniCommandInput) {
-  if (!RunCommand.handler) throw new Error("Mini command handler is unavailable")
+  if (!RunCommand.handler) throw new Error("Mini 命令处理器不可用")
   await RunCommand.handler({
     $0: "opencode",
     _: ["mini"],

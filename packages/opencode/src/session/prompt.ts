@@ -1300,7 +1300,7 @@ const layer = Layer.effect(
               // partial text that was cut off by the provider's filter.
               if (handle.message.finish === "content-filter") {
                 handle.message.error = new SessionV1.ContentFilterError({
-                  message: "The response was blocked by the provider's content filter",
+                  message: "响应被提供商内容过滤器拦截",
                 }).toObject()
                 yield* sessions.updateMessage(handle.message)
                 yield* events.publish(Session.Event.Error, { sessionID, error: handle.message.error })
@@ -1308,7 +1308,7 @@ const layer = Layer.effect(
               }
               if (format.type === "json_schema") {
                 handle.message.error = new SessionV1.StructuredOutputError({
-                  message: "Model did not produce structured output",
+                  message: "模型未生成结构化输出",
                   retries: 0,
                 }).toObject()
                 yield* sessions.updateMessage(handle.message)

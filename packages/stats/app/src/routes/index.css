@@ -42,11 +42,6 @@
     U+2020-2022, U+2026, U+2030, U+2039-203A, U+2044, U+20AC, U+2122, U+2212, U+FB01-FB02;
 }
 
-body {
-  min-width: 320px;
-  margin: 0;
-}
-
 [data-page="stats"] {
   color-scheme: light;
   --color-background: #ffffff;
@@ -5326,8 +5321,10 @@ body {
 
 [data-page="stats"] [data-component="comparison-card"] b {
   min-width: 0;
+  overflow: hidden;
   font: inherit;
-  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 [data-page="stats"] [data-component="comparison-card"] i {
@@ -5775,7 +5772,9 @@ body {
 }
 
 [data-page="stats"] [data-slot="compare-home-select-name"] {
-  overflow-wrap: anywhere;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 [data-page="stats"] [data-slot="compare-home-select-panel"][data-selected="true"] [data-slot="compare-home-plus"] {
@@ -5806,10 +5805,10 @@ body {
 [data-page="stats"] [data-component="compare-home-card"] {
   position: relative;
   display: grid;
-  grid-template-rows: 62px 1px auto 20px;
+  grid-template-rows: 62px 1px 20px 20px;
   gap: 16px;
   min-width: 0;
-  min-height: 184px;
+  height: 184px;
   box-sizing: border-box;
   padding: 16px;
   overflow: hidden;
@@ -5891,11 +5890,10 @@ body {
 [data-page="stats"] [data-slot="compare-home-card-models"] {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   gap: 6px;
   color: var(--stats-muted);
   font-weight: 400;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
 }
 
 [data-page="stats"] [data-slot="compare-home-card-models"] span {
@@ -6078,7 +6076,6 @@ body {
   height: 800px;
   box-sizing: border-box;
   border-right: 1px solid var(--stats-line);
-  border-bottom: 1px solid var(--stats-line);
   border-left: 1px solid var(--stats-line);
   color: var(--stats-text);
   background: var(--stats-bg);
@@ -6116,9 +6113,11 @@ body {
 
 [data-page="stats"] [data-slot="compare-radar-legend"] strong,
 [data-page="stats"] [data-slot="compare-radar-legend"] small {
+  overflow: hidden;
   font-size: 13px;
   line-height: 18px;
-  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 [data-page="stats"] [data-slot="compare-radar-legend"] strong {
@@ -6274,7 +6273,7 @@ body {
   white-space: nowrap;
 }
 
-[data-page="stats"] [data-component="compare-detail-comparison"] {
+[data-page="stats"] [data-component="compare-detail-table"] {
   --compare-detail-label-column: 292px;
   --compare-detail-model-column-min: 360px;
   position: relative;
@@ -6331,10 +6330,10 @@ body {
 }
 
 [data-page="stats"]
-  [data-component="compare-detail-comparison"][data-model-count="3"]
+  [data-component="compare-detail-table"][data-model-count="3"]
   [data-section="compare-detail-selector"],
 [data-page="stats"]
-  [data-component="compare-detail-comparison"][data-model-count="3"]
+  [data-component="compare-detail-table"][data-model-count="3"]
   [data-section="compare-detail-matrix"] {
   min-width: calc(
     var(--compare-detail-label-column) + var(--compare-detail-model-column-min) +
@@ -6343,10 +6342,10 @@ body {
 }
 
 [data-page="stats"]
-  [data-component="compare-detail-comparison"][data-model-count="4"]
+  [data-component="compare-detail-table"][data-model-count="4"]
   [data-section="compare-detail-selector"],
 [data-page="stats"]
-  [data-component="compare-detail-comparison"][data-model-count="4"]
+  [data-component="compare-detail-table"][data-model-count="4"]
   [data-section="compare-detail-matrix"] {
   min-width: calc(
     var(--compare-detail-label-column) + var(--compare-detail-model-column-min) +
@@ -6356,10 +6355,10 @@ body {
 }
 
 [data-page="stats"]
-  [data-component="compare-detail-comparison"][data-model-count="5"]
+  [data-component="compare-detail-table"][data-model-count="5"]
   [data-section="compare-detail-selector"],
 [data-page="stats"]
-  [data-component="compare-detail-comparison"][data-model-count="5"]
+  [data-component="compare-detail-table"][data-model-count="5"]
   [data-section="compare-detail-matrix"] {
   min-width: calc(
     var(--compare-detail-label-column) + var(--compare-detail-model-column-min) +
@@ -6369,10 +6368,10 @@ body {
 }
 
 [data-page="stats"]
-  [data-component="compare-detail-comparison"][data-model-count="6"]
+  [data-component="compare-detail-table"][data-model-count="6"]
   [data-section="compare-detail-selector"],
 [data-page="stats"]
-  [data-component="compare-detail-comparison"][data-model-count="6"]
+  [data-component="compare-detail-table"][data-model-count="6"]
   [data-section="compare-detail-matrix"] {
   min-width: calc(
     var(--compare-detail-label-column) + var(--compare-detail-model-column-min) +
@@ -6428,11 +6427,13 @@ body {
 
 [data-page="stats"] [data-slot="compare-detail-select-name"] {
   min-width: 0;
+  overflow: hidden;
   color: var(--stats-text);
   font-size: 13px;
   font-weight: 500;
   line-height: 18px;
-  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 [data-page="stats"] button[data-slot="compare-detail-select-model"] > svg {
@@ -6662,7 +6663,7 @@ body {
     aspect-ratio: 1;
   }
 
-  [data-page="stats"] [data-component="compare-detail-comparison"] {
+  [data-page="stats"] [data-component="compare-detail-table"] {
     --compare-detail-label-column: 220px;
     --compare-detail-model-column-min: 320px;
   }
@@ -6753,7 +6754,7 @@ body {
     margin-left: -6px;
   }
 
-  [data-page="stats"] [data-component="compare-detail-comparison"] {
+  [data-page="stats"] [data-component="compare-detail-table"] {
     --compare-detail-label-column: 188px;
     --compare-detail-model-column-min: 246px;
   }
@@ -6908,11 +6909,13 @@ body {
 
 [data-page="stats"] [data-slot="compare-model-modal-row-main"] > span:last-child {
   min-width: 0;
+  overflow: hidden;
   color: var(--stats-text);
   font-size: 13px;
   font-weight: 500;
   line-height: 1.1;
-  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 [data-page="stats"] [data-slot="compare-model-modal-badge"] {
@@ -6969,11 +6972,13 @@ body {
 
 [data-page="stats"] [data-slot="compare-model-modal-detail-header"] strong {
   min-width: 0;
+  overflow: hidden;
   color: var(--stats-text);
   font-size: 13px;
   font-weight: 500;
   line-height: 1.1;
-  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 [data-page="stats"] [data-slot="compare-model-modal-description"] {
@@ -7422,15 +7427,13 @@ body {
 
 @media (min-width: 90rem) {
   [data-page="stats"] [data-slot="header-bar"] {
-    display: grid;
-    grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr);
     gap: 32px;
   }
 
   [data-page="stats"] [data-slot="brand"],
   [data-page="stats"] [data-component="section-nav"],
   [data-page="stats"] [data-slot="header-actions"] {
-    min-width: 0;
+    flex: 1 1 0;
   }
 
   [data-page="stats"] [data-slot="brand"] {

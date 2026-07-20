@@ -39,9 +39,9 @@ export function DialogWorkspaceList() {
         return {
           title:
             removing() === workspace.id
-              ? "Deleting..."
+              ? "删除中..."
               : deleting() === workspace.id
-                ? `Delete ${workspace.name}? Press delete again`
+                ? `删除 ${workspace.name}？再次按删除确认`
                 : workspace.name,
           value: { workspace },
           footer: workspace.type,
@@ -71,7 +71,7 @@ export function DialogWorkspaceList() {
       setRemoving(undefined)
       toast.show({
         variant: "error",
-        title: "Failed to delete workspace",
+        title: "删除工作区失败",
         message: errorMessage(result.error),
       })
       return
@@ -94,7 +94,7 @@ export function DialogWorkspaceList() {
 
   return (
     <DialogSelect
-      title="Workspaces"
+      title="工作区"
       options={options()}
       onMove={(option) => {
         setDeleting(undefined)
@@ -103,7 +103,7 @@ export function DialogWorkspaceList() {
       actions={[
         {
           command: "session.delete",
-          title: "delete",
+          title: "删除",
           onTrigger: (option) => void remove(option.value.workspace),
         },
       ]}

@@ -401,14 +401,14 @@ const layer: Layer.Layer<Service, never, Git.Service | EventV2Bridge.Service> = 
         const ctx = yield* InstanceState.context
         if (ctx.project.vcs !== "git") {
           return yield* new PatchApplyError({
-            message: "Patch can't be applied because the project is not git-based",
+            message: "无法应用补丁，因为项目不是基于 Git 的",
             reason: "non-git",
           })
         }
         const applied = yield* git.applyPatch(ctx.directory, input.patch)
         if (applied.exitCode !== 0) {
           return yield* new PatchApplyError({
-            message: "Patch can't be applied",
+            message: "无法应用补丁",
             reason: "not-clean",
           })
         }

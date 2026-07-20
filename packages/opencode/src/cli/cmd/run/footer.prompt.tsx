@@ -981,8 +981,8 @@ export function createPromptState(input: PromptInput): PromptState {
     commands: [
       {
         name: "prompt.clear",
-        title: "Clear prompt or exit",
-        category: "Prompt",
+        title: "清除提示或退出",
+        category: "提示",
         run() {
           if (requestExit()) return
           return false
@@ -998,10 +998,12 @@ export function createPromptState(input: PromptInput): PromptState {
     commands: [
       {
         name: "session.interrupt",
-        title: "Interrupt session",
-        category: "Session",
+        title: "中断会话",
+        category: "会话",
         run() {
+          console.log("[DEBUG:footer.prompt] session.interrupt binding FIRED, calling onInterrupt...")
           if (input.onInterrupt()) return
+          console.log("[DEBUG:footer.prompt] onInterrupt returned falsy")
           return false
         },
       },
@@ -1015,8 +1017,8 @@ export function createPromptState(input: PromptInput): PromptState {
     commands: [
       {
         name: "prompt.editor",
-        title: "Open editor",
-        category: "Prompt",
+        title: "打开编辑器",
+        category: "提示",
         run() {
           void openEditor()
         },
@@ -1031,16 +1033,16 @@ export function createPromptState(input: PromptInput): PromptState {
     commands: [
       {
         name: "prompt.history.previous",
-        title: "Previous prompt history",
-        category: "Prompt",
+        title: "上一个提示历史",
+        category: "提示",
         run(ctx: { event: KeyEvent }) {
           return historyCommand(-1, ctx.event)
         },
       },
       {
         name: "prompt.history.next",
-        title: "Next prompt history",
-        category: "Prompt",
+        title: "下一个提示历史",
+        category: "提示",
         run(ctx: { event: KeyEvent }) {
           return historyCommand(1, ctx.event)
         },
@@ -1058,8 +1060,8 @@ export function createPromptState(input: PromptInput): PromptState {
     bindings: [
       {
         key: "!",
-        desc: "Shell mode",
-        group: "Prompt",
+        desc: "终端模式",
+        group: "提示",
         cmd() {
           if (shell()) return false
           if (!area || area.isDestroyed) return false
@@ -1076,14 +1078,14 @@ export function createPromptState(input: PromptInput): PromptState {
     bindings: [
       {
         key: "escape",
-        desc: "Exit shell mode",
-        group: "Prompt",
+        desc: "退出终端模式",
+        group: "提示",
         cmd: () => setShellMode(false),
       },
       {
         key: "backspace",
-        desc: "Exit shell mode",
-        group: "Prompt",
+        desc: "退出终端模式",
+        group: "提示",
         cmd() {
           if (!area || area.isDestroyed) return false
           if (area.cursorOffset !== 0) return false
@@ -1099,26 +1101,26 @@ export function createPromptState(input: PromptInput): PromptState {
     commands: [
       {
         name: "prompt.autocomplete.prev",
-        title: "Previous autocomplete item",
-        category: "Autocomplete",
+        title: "上一个自动补全项",
+        category: "自动补全",
         run: () => menu.move(-1),
       },
       {
         name: "prompt.autocomplete.next",
-        title: "Next autocomplete item",
-        category: "Autocomplete",
+        title: "下一个自动补全项",
+        category: "自动补全",
         run: () => menu.move(1),
       },
       {
         name: "prompt.autocomplete.hide",
-        title: "Hide autocomplete",
-        category: "Autocomplete",
+        title: "隐藏自动补全",
+        category: "自动补全",
         run: cancelAutocomplete,
       },
       {
         name: "prompt.autocomplete.select",
-        title: "Select autocomplete item",
-        category: "Autocomplete",
+        title: "选择自动补全项",
+        category: "自动补全",
         run() {
           if (mode() === "slash" && options().length === 0) {
             hide()
@@ -1129,8 +1131,8 @@ export function createPromptState(input: PromptInput): PromptState {
       },
       {
         name: "prompt.autocomplete.complete",
-        title: "Complete autocomplete item",
-        category: "Autocomplete",
+        title: "完成自动补全项",
+        category: "自动补全",
         run() {
           if (mode() === "slash" && options().length === 0) {
             hide()

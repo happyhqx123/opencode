@@ -30,16 +30,8 @@ function PromptInputExample() {
     activeTab: undefined as string | undefined,
     reviewOpen: false,
   })
-  const storyModel = {
-    id: "claude-3-7-sonnet",
-    name: "Claude 3.7 Sonnet",
-    provider: { id: "anthropic", name: "Anthropic" },
-  }
   const model = {
-    current: () => storyModel,
-    list: () => [storyModel],
-    visible: () => true,
-    set: () => {},
+    current: () => ({ id: "claude-3-7-sonnet", name: "Claude 3.7 Sonnet", provider: { id: "anthropic" } }),
     variant: {
       list: () => ["fast", "thinking"],
       current: () => controls.variant,
@@ -75,6 +67,7 @@ function PromptInputExample() {
         open: () => setControls("reviewOpen", true),
       },
     },
+    newLayoutDesigns: true,
   }
   const addReviewComment = () => {
     const comment = controls.comments + 1
@@ -153,6 +146,7 @@ function PromptInputWithOpenDock() {
       },
       reviewPanel: { opened: () => false, open: () => {} },
     },
+    newLayoutDesigns: true,
   }
   const state = {
     blocked: () => false,

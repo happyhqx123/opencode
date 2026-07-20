@@ -92,8 +92,8 @@ export function make(input: {
   const initialize = Effect.fn("ACP.initialize")(function* (params: InitializeRequest) {
     const started = performance.now()
     const authMethod: AuthMethod = {
-      description: "Run `opencode auth login` in the terminal",
-      name: "Login with opencode",
+      description: "在终端中运行 `opencode auth login`",
+      name: "登录 opencode",
       id: AuthMethodID,
     }
 
@@ -102,7 +102,7 @@ export function make(input: {
         "terminal-auth": {
           command: "opencode",
           args: ["auth", "login"],
-          label: "OpenCode Login",
+          label: "OpenCode 登录",
         },
       }
     }
@@ -866,7 +866,7 @@ const promptResponse = Effect.fn("ACP.promptResponse")(function* (
 
 function promptErrorMessage(error: AssistantError) {
   if ("message" in error.data && typeof error.data.message === "string") return error.data.message
-  return "OpenCode prompt failed"
+  return "OpenCode 提示词执行失败"
 }
 
 function sendUsageUpdate(

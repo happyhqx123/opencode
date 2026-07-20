@@ -79,8 +79,8 @@ export function retryable(error: Err, provider: string) {
         action: {
           reason: "free_tier_limit",
           provider,
-          title: "Free limit reached",
-          message: "Subscribe to OpenCode Go for reliable access to the best open-source models, starting at $5/month.",
+          title: "免费额度已用完",
+          message: "订阅 OpenCode Go 以可靠访问最佳开源模型，每月仅需 $5 起。",
           label: "subscribe",
           link: GO_UPSELL_URL,
         },
@@ -99,12 +99,12 @@ export function retryable(error: Err, provider: string) {
         const minutes = Math.ceil((seconds % 3_600) / 60)
         const unit = (value: number, name: string) => `${value} ${name}${value === 1 ? "" : "s"}`
 
-        if (days > 0) return hours > 0 ? `${unit(days, "day")} ${unit(hours, "hour")}` : unit(days, "day")
-        if (hours > 0) return minutes > 0 ? `${unit(hours, "hour")} ${unit(minutes, "minute")}` : unit(hours, "hour")
-        return minutes > 0 ? unit(minutes, "minute") : "less than a minute"
+        if (days > 0) return hours > 0 ? `${unit(days, "天")} ${unit(hours, "时")}` : unit(days, "天")
+        if (hours > 0) return minutes > 0 ? `${unit(hours, "时")} ${unit(minutes, "分")}` : unit(hours, "时")
+        return minutes > 0 ? unit(minutes, "分") : "不到一分钟"
       })
 
-      const message = `${limitName ? `${limitName} usage limit` : "Usage limit"} reached. It will reset in ${resetIn}. To continue using this model now, enable usage from your available balance`
+      const message = `${limitName ? `${limitName} 用量限额` : "用量限额"} 已达到。将在 ${resetIn}. 要继续使用此模型，请从可用余额中启用用量`
 
       const link = `https://opencode.ai/workspace/${workspace}/go`
       return {
@@ -119,7 +119,7 @@ export function retryable(error: Err, provider: string) {
         },
       }
     }
-    return { message: error.data.message.includes("Overloaded") ? "Provider is overloaded" : error.data.message }
+    return { message: error.data.message.includes("Overloaded") ? "提供商过载" : error.data.message }
   }
 
   // Check for rate limit patterns in plain text error messages
@@ -140,13 +140,13 @@ export function retryable(error: Err, provider: string) {
   const code = typeof json.code === "string" ? json.code : ""
 
   if (json.type === "error" && json.error?.type === "too_many_requests") {
-    return { message: "Too Many Requests" }
+    return { message: "请求过多" }
   }
   if (code.includes("exhausted") || code.includes("unavailable")) {
-    return { message: "Provider is overloaded" }
+    return { message: "提供商过载" }
   }
   if (json.type === "error" && typeof json.error?.code === "string" && json.error.code.includes("rate_limit")) {
-    return { message: "Rate Limited" }
+    return { message: "频率受限" }
   }
   return undefined
 }

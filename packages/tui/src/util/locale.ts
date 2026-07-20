@@ -10,7 +10,7 @@ export function time(input: number): string {
 export function datetime(input: number): string {
   const date = new Date(input)
   const localTime = time(input)
-  const localDate = date.toLocaleDateString()
+  const localDate = date.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" })
   return `${localTime} · ${localDate}`
 }
 
@@ -38,24 +38,24 @@ export function number(num: number): string {
 
 export function duration(input: number) {
   if (input < 1000) {
-    return `${input}ms`
+    return `${input}毫秒`
   }
   if (input < 60000) {
-    return `${(input / 1000).toFixed(1)}s`
+    return `${(input / 1000).toFixed(1)}秒`
   }
   if (input < 3600000) {
     const minutes = Math.floor(input / 60000)
     const seconds = Math.floor((input % 60000) / 1000)
-    return `${minutes}m ${seconds}s`
+    return `${minutes}分 ${seconds}秒`
   }
   if (input < 86400000) {
     const hours = Math.floor(input / 3600000)
     const minutes = Math.floor((input % 3600000) / 60000)
-    return `${hours}h ${minutes}m`
+    return `${hours}时 ${minutes}分`
   }
   const days = Math.floor(input / 86400000)
   const hours = Math.floor((input % 86400000) / 3600000)
-  return `${days}d ${hours}h`
+  return `${days}天 ${hours}时`
 }
 
 export function truncate(str: string, len: number): string {

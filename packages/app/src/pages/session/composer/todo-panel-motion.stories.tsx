@@ -71,6 +71,7 @@ const controls = {
     tabs: { active: () => undefined, all: () => [], open: () => {}, setActive: () => {} },
     reviewPanel: { opened: () => false, open: () => {} },
   },
+  newLayoutDesigns: true,
 }
 
 const css = `

@@ -45,8 +45,8 @@ import { ProviderV2 } from "@opencode-ai/core/provider"
 import { ModelV2 } from "@opencode-ai/core/model"
 import { SessionMessage } from "@opencode-ai/schema/session-message"
 
-const parentTitlePrefix = "New session - "
-const childTitlePrefix = "Child session - "
+const parentTitlePrefix = "新会话 - "
+const childTitlePrefix = "子会话 - "
 
 export function isDefaultTitle(title: string) {
   return new RegExp(

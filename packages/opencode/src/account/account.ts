@@ -251,7 +251,7 @@ const layer: Layer.Layer<Service, never, AccountRepo.Service | HttpClient.HttpCl
       lookup: Effect.fnUntraced(function* (accountID) {
         const maybeAccount = yield* repo.getRow(accountID)
         if (Option.isNone(maybeAccount)) {
-          return yield* Effect.fail(new AccountServiceError({ message: "Account not found during token refresh" }))
+          return yield* Effect.fail(new AccountServiceError({ message: "令牌刷新期间未找到账户" }))
         }
 
         const account = maybeAccount.value

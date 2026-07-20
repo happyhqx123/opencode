@@ -6,7 +6,7 @@ export async function CloudflareWorkersAuthPlugin(_input: PluginInput): Promise<
         {
           type: "text" as const,
           key: "accountId",
-          message: "Enter your Cloudflare Account ID",
+          message: "输入您的 Cloudflare 账户 ID",
           placeholder: "e.g. 1234567890abcdef1234567890abcdef",
         },
       ]
@@ -33,7 +33,7 @@ export async function CloudflareAIGatewayAuthPlugin(_input: PluginInput): Promis
           {
             type: "text" as const,
             key: "accountId",
-            message: "Enter your Cloudflare Account ID",
+            message: "输入您的 Cloudflare 账户 ID",
             placeholder: "e.g. 1234567890abcdef1234567890abcdef",
           },
         ]
@@ -43,7 +43,7 @@ export async function CloudflareAIGatewayAuthPlugin(_input: PluginInput): Promis
           {
             type: "text" as const,
             key: "gatewayId",
-            message: "Enter your Cloudflare AI Gateway ID",
+            message: "输入 Cloudflare AI Gateway ID",
             placeholder: "e.g. my-gateway",
           },
         ]
@@ -56,7 +56,7 @@ export async function CloudflareAIGatewayAuthPlugin(_input: PluginInput): Promis
       methods: [
         {
           type: "api",
-          label: "Gateway API token",
+          label: "Gateway API 令牌",
           prompts,
         },
       ],

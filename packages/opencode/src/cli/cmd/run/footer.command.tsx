@@ -97,11 +97,11 @@ function countLabel(count: number, total: number, query: string) {
 }
 
 function categoryRank(category: string) {
-  if (category === "Project Commands") {
+  if (category === "项目命令") {
     return 0
   }
 
-  if (category === "MCP Commands") {
+  if (category === "MCP 命令") {
     return 1
   }
 
@@ -359,8 +359,8 @@ export function RunCommandMenuBody(props: {
     const session: CommandEntry[] = [
       {
         action: "editor",
-        category: "Session",
-        display: "Open editor",
+        category: "会话",
+        display: "打开编辑器",
         footer: "/editor",
         keywords: "editor compose draft external editor",
       },
@@ -368,8 +368,8 @@ export function RunCommandMenuBody(props: {
         ? [
             {
               action: "subagent" as const,
-              category: "Session",
-              display: "View subagents",
+              category: "会话",
+              display: "查看子智能体",
               footer:
                 activeSubagentCount() > 0 ? `${activeSubagentCount()} active` : `${props.subagents().length} recent`,
               keywords: props
@@ -381,9 +381,9 @@ export function RunCommandMenuBody(props: {
         : []),
       {
         action: "slash",
-        category: "Session",
+        category: "会话",
         name: "new",
-        display: "New session",
+        display: "新建会话",
         footer: "/new",
         keywords: "new session clear",
       },
@@ -393,8 +393,8 @@ export function RunCommandMenuBody(props: {
         ? [
             {
               action: "skill" as const,
-              category: "Prompt",
-              display: "Skills",
+              category: "提示",
+              display: "技能",
               footer: "/skills",
               keywords: `skill skills ${skills()
                 .map((item) => `${item.name} ${item.description ?? ""}`)
@@ -405,15 +405,15 @@ export function RunCommandMenuBody(props: {
     const agent: CommandEntry[] = [
       {
         action: "model",
-        category: "Agent",
-        display: "Switch model",
+        category: "智能体",
+        display: "切换模型",
       },
       ...(props.queued().length > 0
         ? [
             {
               action: "queued" as const,
-              category: "Agent",
-              display: "Manage queued prompts",
+              category: "智能体",
+              display: "管理已排队的提示",
               footer: `${props.queued().length} queued`,
               keywords: props
                 .queued()
@@ -424,8 +424,8 @@ export function RunCommandMenuBody(props: {
         : []),
       {
         action: "variant.cycle",
-        category: "Agent",
-        display: "Variant cycle",
+        category: "智能体",
+        display: "变体切换",
         footer: props.variantCycle,
         keywords: "variant cycle",
       },
@@ -433,8 +433,8 @@ export function RunCommandMenuBody(props: {
         ? [
             {
               action: "variant.list" as const,
-              category: "Agent",
-              display: "Switch model variant",
+              category: "智能体",
+              display: "切换模型变体",
               keywords: `variant variants ${props.variants().join(" ")}`,
             },
           ]
@@ -446,7 +446,7 @@ export function RunCommandMenuBody(props: {
         (item) =>
           ({
             action: "slash",
-            category: item.source === "mcp" ? "MCP Commands" : "Project Commands",
+            category: item.source === "mcp" ? "MCP 命令" : "项目命令",
             name: item.name,
             display: item.name,
             footer: `/${item.name}`,
@@ -463,7 +463,7 @@ export function RunCommandMenuBody(props: {
       ...prompt,
       ...agent,
       ...commands,
-      { action: "exit", category: "System", display: "Exit", footer: "/exit", keywords: "/exit exit" },
+      { action: "exit", category: "系统", display: "退出", footer: "/exit", keywords: "/exit exit" },
     ]
   })
   const items = createMemo<CommandEntry[]>(() => match(query(), entries()))
@@ -540,7 +540,7 @@ export function RunCommandMenuBody(props: {
 
   return (
     <PanelShell
-      title="Commands"
+      title="命令"
       countVisible={false}
       query={query()}
       count={items().length}
@@ -644,7 +644,7 @@ export function RunSubagentSelectBody(props: {
 
   return (
     <PanelShell
-      title="Select subagent"
+      title="选择子智能体"
       query={query()}
       count={items().length}
       total={entries().length}
@@ -741,7 +741,7 @@ export function RunQueuedPromptSelectBody(props: {
 
   return (
     <PanelShell
-      title="Queued prompts"
+      title="已排队的提示"
       query={query()}
       count={items().length}
       total={entries().length}
@@ -818,7 +818,7 @@ export function RunSkillSelectBody(props: {
 
   return (
     <PanelShell
-      title="Skills"
+      title="技能"
       query={query()}
       count={items().length}
       total={entries().length}
@@ -838,7 +838,7 @@ export function RunSkillSelectBody(props: {
         offset={menu.offset}
         rows={() => PANEL_LIST_ROWS}
         limit={PANEL_LIST_ROWS}
-        empty={props.commands() ? "No skills found" : "Skills loading"}
+        empty={props.commands() ? "未找到技能" : "技能加载中..."}
         border={false}
         paddingLeft={PANEL_PAD}
         paddingRight={PANEL_PAD}
@@ -861,7 +861,7 @@ export function RunVariantSelectBody(props: {
   const entries = createMemo<VariantEntry[]>(() => [
     {
       category: "",
-      display: "Default",
+      display: "默认",
       description: props.current() === undefined ? "current" : undefined,
       keywords: "default",
       variant: undefined,
@@ -916,7 +916,7 @@ export function RunVariantSelectBody(props: {
 
   return (
     <PanelShell
-      title="Select variant"
+      title="选择变体"
       query={query()}
       count={items().length}
       total={entries().length}
@@ -1037,7 +1037,7 @@ export function RunModelSelectBody(props: {
 
   return (
     <PanelShell
-      title="Select model"
+      title="选择模型"
       query={query()}
       count={items().length}
       total={entries().length}
@@ -1057,7 +1057,7 @@ export function RunModelSelectBody(props: {
         offset={menu.offset}
         rows={() => PANEL_LIST_ROWS}
         limit={PANEL_LIST_ROWS}
-        empty={props.providers() ? "No results found" : "Models loading"}
+        empty={props.providers() ? "未找到结果" : "模型加载中..."}
         border={false}
         paddingLeft={PANEL_PAD}
         paddingRight={PANEL_PAD}

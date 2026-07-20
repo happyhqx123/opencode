@@ -897,7 +897,7 @@ function emitPermission(state: State, kind: PermissionKind = "edit"): void {
       patterns: ["*"],
       always: ["*"],
       done: {
-        title: "Retry allowed",
+        title: "允许重试",
         output: "Continuing after repeated failures.\n",
         metadata: {},
       },

@@ -193,7 +193,7 @@ const layer: Layer.Layer<
 
         return { name, directory, ...(branch ? { branch } : {}) }
       }
-      return yield* new NameGenerationFailedError({ message: "Failed to generate a unique worktree name" })
+      return yield* new NameGenerationFailedError({ message: "无法生成唯一的工作树名称" })
     })
 
     const makeWorktreeInfo = Effect.fn("Worktree.makeWorktreeInfo")(function* (input?: {
@@ -202,7 +202,7 @@ const layer: Layer.Layer<
     }) {
       const ctx = yield* InstanceState.context
       if (ctx.project.vcs !== "git") {
-        return yield* new NotGitError({ message: "Worktrees are only supported for git projects" })
+        return yield* new NotGitError({ message: "工作树仅支持 Git 项目" })
       }
 
       const root = pathSvc.join(Global.Path.data, "worktree", ctx.project.id)
@@ -388,7 +388,7 @@ const layer: Layer.Layer<
     const remove = Effect.fn("Worktree.remove")(function* (input: RemoveInput) {
       const ctx = yield* InstanceState.context
       if (ctx.project.vcs !== "git") {
-        return yield* new NotGitError({ message: "Worktrees are only supported for git projects" })
+        return yield* new NotGitError({ message: "工作树仅支持 Git 项目" })
       }
 
       const directory = yield* canonical(input.directory)
@@ -525,13 +525,13 @@ const layer: Layer.Layer<
     const reset = Effect.fn("Worktree.reset")(function* (input: ResetInput) {
       const ctx = yield* InstanceState.context
       if (ctx.project.vcs !== "git") {
-        return yield* new NotGitError({ message: "Worktrees are only supported for git projects" })
+        return yield* new NotGitError({ message: "工作树仅支持 Git 项目" })
       }
 
       const directory = yield* canonical(input.directory)
       const primary = yield* canonical(ctx.worktree)
       if (directory === primary) {
-        return yield* new ResetFailedError({ message: "Cannot reset the primary workspace" })
+        return yield* new ResetFailedError({ message: "无法重置主工作区" })
       }
 
       const list = yield* git(["worktree", "list", "--porcelain"], { cwd: ctx.worktree })
@@ -541,14 +541,14 @@ const layer: Layer.Layer<
 
       const entry = yield* locateWorktree(parseWorktreeList(list.text), directory)
       if (!entry?.path) {
-        return yield* new ResetFailedError({ message: "Worktree not found" })
+        return yield* new ResetFailedError({ message: "未找到工作树" })
       }
 
       const worktreePath = entry.path
 
       const base = yield* gitSvc.defaultBranch(ctx.worktree)
       if (!base) {
-        return yield* new ResetFailedError({ message: "Default branch not found" })
+        return yield* new ResetFailedError({ message: "未找到默认分支" })
       }
 
       const sep = base.ref.indexOf("/")

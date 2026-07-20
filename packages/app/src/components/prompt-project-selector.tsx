@@ -55,7 +55,7 @@ export function createPromptProjectController(input: {
   const [store, setStore] = createStore({ open: false, search: "", active: "" })
   let searchRef: HTMLInputElement | undefined
 
-  const current = () => {
+  const selected = () => {
     const key = pathKey(input.controls().directory)
     return input
       .controls()
@@ -65,7 +65,6 @@ export function createPromptProjectController(input: {
           (pathKey(project.worktree) === key || project.sandboxes?.some((sandbox) => pathKey(sandbox) === key)),
       )
   }
-  const selected = () => current() ?? input.controls().available[0]
   const projects = () => {
     const search = store.search.trim().toLowerCase()
     if (!search) return input.controls().available
@@ -101,8 +100,8 @@ export function createPromptProjectController(input: {
   }
   const select = (project: PromptProject) => {
     if (
-      pathKey(project.worktree) !== pathKey(current()?.worktree ?? "") ||
-      project.server?.key !== current()?.server?.key
+      pathKey(project.worktree) !== pathKey(selected()?.worktree ?? "") ||
+      project.server?.key !== selected()?.server?.key
     ) {
       input.controls().select(project.worktree, project.server?.key)
     }
@@ -125,7 +124,6 @@ export function createPromptProjectController(input: {
 
   return {
     selected,
-    empty: () => input.controls().available.length === 0,
     projects,
     servers,
     projectKey,

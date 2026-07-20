@@ -105,7 +105,7 @@ function createSessionResolver(fn?: CreateSession) {
   return async (ctx: BootContext, input: CreateSessionInput): Promise<ResolvedSession> => {
     const created = await fn(ctx.sdk, input)
     if (!created.id) {
-      throw new Error("Failed to create session")
+      throw new Error("创建会话失败")
     }
 
     return {
@@ -338,18 +338,23 @@ async function runInteractiveRuntime(input: RunRuntimeInput, deps: RunRuntimeDep
       }
     },
     onInterrupt: () => {
+      console.log("[DEBUG:runtime.onInterrupt] called, hasSession=", hasSession(input, state), "aborting=", state.aborting, "sessionID=", state.sessionID)
       if (!hasSession(input, state) || state.aborting) {
+        console.log("[DEBUG:runtime.onInterrupt] EARLY RETURN")
         return
       }
 
       state.aborting = true
+      console.log("[DEBUG:runtime.onInterrupt] calling sdk.session.abort...")
       void ctx.sdk.session
         .abort({
           sessionID: state.sessionID,
         })
-        .catch(() => {})
+        .then(() => console.log("[DEBUG:runtime.onInterrupt] abort succeeded"))
+        .catch((e) => console.log("[DEBUG:runtime.onInterrupt] abort failed:", e))
         .finally(() => {
           state.aborting = false
+          console.log("[DEBUG:runtime.onInterrupt] aborting reset")
         })
     },
     onBackground: () => {
@@ -755,7 +760,7 @@ export async function runInteractiveLocalMode(input: RunLocalInput): Promise<voi
 
       session = Promise.all([input.resolveAgent(), input.session(sdk)]).then(([agent, next]) => {
         if (!next?.id) {
-          throw new Error("Session not found")
+          throw new Error("未找到会话")
         }
 
         void input.share(sdk, next.id).catch(() => {})

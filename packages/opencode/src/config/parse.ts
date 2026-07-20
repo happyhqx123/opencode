@@ -46,7 +46,7 @@ export function schema<S extends EffectSchema.Decoder<unknown, never>>(
           code: "unrecognized_keys",
           keys: extra,
           path: [],
-          message: `Unrecognized key${extra.length === 1 ? "" : "s"}: ${extra.join(", ")}`,
+          message: `未识别的配置键: ${extra.join(", ")}`,
         },
       ],
     })

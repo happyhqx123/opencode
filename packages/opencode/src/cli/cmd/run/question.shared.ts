@@ -320,21 +320,21 @@ export function questionReject(request: QuestionRequest): QuestionReject {
 
 export function questionHint(request: QuestionRequest, state: QuestionBodyState): string {
   if (state.submitting) {
-    return "Waiting for question event..."
+    return "等待问题事件..."
   }
 
   if (questionConfirm(request, state)) {
-    return "enter submit   esc dismiss"
+    return "回车 提交   esc 关闭"
   }
 
   if (state.editing) {
-    return "enter save   esc cancel"
+    return "回车 保存   esc 取消"
   }
 
   const info = questionInfo(request, state)
   if (questionSingle(request)) {
-    return `↑↓ select   enter ${info?.multiple ? "toggle" : "submit"}   esc dismiss`
+    return `↑↓ 选择   enter ${info?.multiple ? "切换" : "提交"}   esc 关闭`
   }
 
-  return `⇆ tab   ↑↓ select   enter ${info?.multiple ? "toggle" : "confirm"}   esc dismiss`
+  return `⇆ tab   ↑↓ 选择   enter ${info?.multiple ? "切换" : "确认"}   esc 关闭`
 }

@@ -117,7 +117,7 @@ async function exchangeCodeForTokens(code: string, redirectUri: string, pkce: Pk
     }).toString(),
   })
   if (!response.ok) {
-    throw new Error(`Token exchange failed: ${response.status}`)
+    throw new Error(`令牌交换失败: ${response.status}`)
   }
   return response.json()
 }
@@ -133,7 +133,7 @@ async function refreshAccessToken(refreshToken: string, issuer = ISSUER): Promis
     }).toString(),
   })
   if (!response.ok) {
-    throw new Error(`Token refresh failed: ${response.status}`)
+    throw new Error(`令牌刷新失败: ${response.status}`)
   }
   return response.json()
 }
@@ -175,7 +175,7 @@ async function startOAuthServer(): Promise<{ port: number; redirectUri: string }
       }
 
       if (!code) {
-        const errorMsg = "Missing authorization code"
+        const errorMsg = "缺少授权码"
         pendingOAuth?.reject(new Error(errorMsg))
         pendingOAuth = undefined
         res.writeHead(400, { "Content-Type": "text/html; charset=utf-8" })
@@ -184,7 +184,7 @@ async function startOAuthServer(): Promise<{ port: number; redirectUri: string }
       }
 
       if (!pendingOAuth || state !== pendingOAuth.state) {
-        const errorMsg = "Invalid state - potential CSRF attack"
+        const errorMsg = "状态无效 - 可能存在 CSRF 攻击"
         pendingOAuth?.reject(new Error(errorMsg))
         pendingOAuth = undefined
         res.writeHead(400, { "Content-Type": "text/html; charset=utf-8" })
@@ -205,15 +205,15 @@ async function startOAuthServer(): Promise<{ port: number; redirectUri: string }
     }
 
     if (url.pathname === "/cancel") {
-      pendingOAuth?.reject(new Error("Login cancelled"))
+      pendingOAuth?.reject(new Error("登录已取消"))
       pendingOAuth = undefined
       res.writeHead(200)
-      res.end("Login cancelled")
+      res.end("登录已取消")
       return
     }
 
     res.writeHead(404)
-    res.end("Not found")
+    res.end("未找到")
   })
 
   await new Promise<void>((resolve, reject) => {
@@ -428,7 +428,7 @@ export async function CodexAuthPlugin(input: PluginInput, options: CodexAuthPlug
       },
       methods: [
         {
-          label: "ChatGPT Pro/Plus (browser)",
+          label: "ChatGPT Pro/Plus（浏览器）",
           type: "oauth",
           authorize: async () => {
             const { redirectUri } = await startOAuthServer()
@@ -440,7 +440,7 @@ export async function CodexAuthPlugin(input: PluginInput, options: CodexAuthPlug
 
             return {
               url: authUrl,
-              instructions: "Complete authorization in your browser. This window will close automatically.",
+              instructions: "在浏览器中完成授权。此窗口将自动关闭。",
               method: "auto" as const,
               callback: async () => {
                 const tokens = await callbackPromise
@@ -458,7 +458,7 @@ export async function CodexAuthPlugin(input: PluginInput, options: CodexAuthPlug
           },
         },
         {
-          label: "ChatGPT Pro/Plus (headless)",
+          label: "ChatGPT Pro/Plus（无头）",
           type: "oauth",
           authorize: async () => {
             const deviceResponse = await fetch(`${ISSUER}/api/accounts/deviceauth/usercode`, {
@@ -470,7 +470,7 @@ export async function CodexAuthPlugin(input: PluginInput, options: CodexAuthPlug
               body: JSON.stringify({ client_id: CLIENT_ID }),
             })
 
-            if (!deviceResponse.ok) throw new Error("Failed to initiate device authorization")
+            if (!deviceResponse.ok) throw new Error("无法启动设备授权")
 
             const deviceData = (await deviceResponse.json()) as {
               device_auth_id: string
@@ -481,7 +481,7 @@ export async function CodexAuthPlugin(input: PluginInput, options: CodexAuthPlug
 
             return {
               url: `${ISSUER}/codex/device`,
-              instructions: `Enter code: ${deviceData.user_code}`,
+              instructions: `输入代码：${deviceData.user_code}`,
               method: "auto" as const,
               async callback() {
                 while (true) {
@@ -516,7 +516,7 @@ export async function CodexAuthPlugin(input: PluginInput, options: CodexAuthPlug
                     })
 
                     if (!tokenResponse.ok) {
-                      throw new Error(`Token exchange failed: ${tokenResponse.status}`)
+                      throw new Error(`令牌交换失败: ${tokenResponse.status}`)
                     }
 
                     const tokens: TokenResponse = await tokenResponse.json()
@@ -541,7 +541,7 @@ export async function CodexAuthPlugin(input: PluginInput, options: CodexAuthPlug
           },
         },
         {
-          label: "Manually enter API Key",
+          label: "手动输入 API 密钥",
           type: "api",
         },
       ],

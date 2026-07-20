@@ -40,7 +40,7 @@ export function DialogSkill(props: DialogSkillProps) {
       title: skill.name.padEnd(maxWidth),
       description: skill.description?.replace(/\s+/g, " ").trim(),
       value: skill.name,
-      category: "Skills",
+      category: "技能",
       onSelect: () => {
         props.onSelect(skill.name)
         dialog.clear()
@@ -50,8 +50,8 @@ export function DialogSkill(props: DialogSkillProps) {
 
   return (
     <DialogSelect
-      title="Skills"
-      placeholder="Search skills..."
+      title="技能"
+      placeholder="搜索技能..."
       options={options()}
       renderFilter={!showError()}
       locked={showError()}

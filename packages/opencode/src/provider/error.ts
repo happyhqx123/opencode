@@ -38,7 +38,7 @@ function message(providerID: ProviderV2.ID, e: APICallError) {
         const err = STATUS_CODES[e.statusCode]
         if (err) return err
       }
-      return "Unknown error"
+      return "未知错误"
     }
 
     if (!e.responseBody || (e.statusCode && msg !== STATUS_CODES[e.statusCode])) {
@@ -58,10 +58,10 @@ function message(providerID: ProviderV2.ID, e: APICallError) {
     // provide a human-readable message instead of dumping raw markup
     if (/^\s*<!doctype|^\s*<html/i.test(e.responseBody)) {
       if (e.statusCode === 401) {
-        return "Unauthorized: request was blocked by a gateway or proxy. Your authentication token may be missing or expired — try running `opencode auth login <your provider URL>` to re-authenticate."
+        return "未授权：请求被网关或代理拦截。您的认证令牌可能缺失或已过期 — 请执行 `opencode auth login <提供商 URL>` 重新认证。"
       }
       if (e.statusCode === 403) {
-        return "Forbidden: request was blocked by a gateway or proxy. You may not have permission to access this resource — check your account and provider settings."
+        return "禁止访问：请求被网关或代理拦截。您可能没有访问此资源的权限 — 请检查您的账户和提供商设置。"
       }
       return msg
     }
@@ -111,20 +111,20 @@ export function parseStreamError(input: unknown): ParsedStreamError | undefined 
     case "context_length_exceeded":
       return {
         type: "context_overflow",
-        message: "Input exceeds context window of this model",
+        message: "输入超出此模型的上下文窗口",
         responseBody,
       }
     case "insufficient_quota":
       return {
         type: "api_error",
-        message: "Quota exceeded. Check your plan and billing details.",
+        message: "配额已超出，请检查您的套餐和账单详情。",
         isRetryable: false,
         responseBody,
       }
     case "usage_not_included":
       return {
         type: "api_error",
-        message: "To use Codex with your ChatGPT plan, upgrade to Plus: https://chatgpt.com/explore/plus.",
+        message: "要在 ChatGPT 套餐中使用 Codex，请升级至 Plus：https://chatgpt.com/explore/plus。",
         isRetryable: false,
         responseBody,
       }

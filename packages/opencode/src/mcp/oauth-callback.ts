@@ -44,7 +44,7 @@ function handleRequest(req: import("http").IncomingMessage, res: import("http").
 
   if (url.pathname !== currentPath) {
     res.writeHead(404)
-    res.end("Not found")
+    res.end("未找到")
     return
   }
 
@@ -55,7 +55,7 @@ function handleRequest(req: import("http").IncomingMessage, res: import("http").
 
   // Enforce state parameter presence
   if (!state) {
-    const errorMsg = "Missing required state parameter - potential CSRF attack"
+    const errorMsg = "缺少必需的 state 参数 — 可能存在 CSRF 攻击"
     res.writeHead(400, { "Content-Type": "text/html; charset=utf-8" })
     res.end(OauthCallbackPage.error(errorMsg, { provider: "MCP" }))
     return
@@ -78,13 +78,13 @@ function handleRequest(req: import("http").IncomingMessage, res: import("http").
 
   if (!code) {
     res.writeHead(400, { "Content-Type": "text/html; charset=utf-8" })
-    res.end(OauthCallbackPage.error("No authorization code provided", { provider: "MCP" }))
+    res.end(OauthCallbackPage.error("未提供授权码", { provider: "MCP" }))
     return
   }
 
   // Validate state parameter
   if (!pendingAuths.has(state)) {
-    const errorMsg = "Invalid or expired state parameter - potential CSRF attack"
+    const errorMsg = "无效或已过期的 state 参数 — 可能存在 CSRF 攻击"
     res.writeHead(400, { "Content-Type": "text/html; charset=utf-8" })
     res.end(OauthCallbackPage.error(errorMsg, { provider: "MCP" }))
     return
@@ -155,7 +155,7 @@ export function cancelPending(mcpName: string): void {
     clearTimeout(pending.timeout)
     pendingAuths.delete(key)
     mcpNameToState.delete(mcpName)
-    pending.reject(new Error("Authorization cancelled"))
+    pending.reject(new Error("授权已取消"))
     stopIfIdle()
   }
 }

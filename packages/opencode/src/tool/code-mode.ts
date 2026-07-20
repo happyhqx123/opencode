@@ -201,7 +201,7 @@ export const CodeModeTool = Tool.define(
           return {
             title: CODE_MODE_TOOL,
             metadata: { toolCalls: [], error: true },
-            output: "Execution cancelled.",
+            output: "执行已取消。",
           } satisfies Tool.ExecuteResult<Metadata>
         }
         const agent = yield* agents.get(ctx.agent)
@@ -267,7 +267,7 @@ export const CodeModeTool = Tool.define(
         })
         const cancelled = (): CodeMode.Result => ({
           ok: false,
-          error: { kind: "ExecutionFailure", message: "Execution cancelled." },
+          error: { kind: "ExecutionFailure", message: "执行已取消。" },
           toolCalls: calls.map((call) => ({ name: call.tool })),
         })
 
@@ -283,7 +283,7 @@ export const CodeModeTool = Tool.define(
             return {
               title: CODE_MODE_TOOL,
               metadata: { toolCalls: calls, error: true },
-              output: "Execution cancelled.",
+              output: "执行已取消。",
             } satisfies Tool.ExecuteResult<Metadata>
           }
           const hints = (result.error.suggestions ?? []).filter((hint) => !result.error.message.includes(hint))

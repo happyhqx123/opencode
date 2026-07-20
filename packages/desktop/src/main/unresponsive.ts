@@ -1,6 +1,5 @@
 import type { BrowserWindow } from "electron"
 import { write as writeLog } from "./logging"
-import { safeWindowURL } from "./window-state"
 
 const sampleInterval = 1000
 const samplePeriod = 15000
@@ -47,7 +46,7 @@ export function createUnresponsiveSampler(win: BrowserWindow, name: string) {
     const message = [
       "renderer unresponsive samples",
       `Window: ${name}`,
-      `URL: ${safeWindowURL(win)}`,
+      `URL: ${win.isDestroyed() ? "<destroyed>" : win.webContents.getURL()}`,
       ...entries.map((entry) => `<${entry[1]}> ${entry[0]}`),
       `Total Samples: ${total}`,
     ].join("\n")

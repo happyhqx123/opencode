@@ -23,9 +23,9 @@ export function cliErrorMessage(input: unknown): string | undefined {
       : []
     return [
       `Model not found: ${field(model, "providerID")}/${field(model, "modelID")}`,
-      ...(suggestions.length ? ["Did you mean: " + suggestions.join(", ")] : []),
-      "Try: `opencode models` to list available models",
-      "Or check your config (opencode.json) provider/model names",
+      ...(suggestions.length ? ["您是否想输入: " + suggestions.join(", ")] : []),
+      "尝试: `opencode models` 查看可用模型",
+      "或检查配置文件 (opencode.json) 中的 provider/model 名称",
     ].join("\n")
   }
 

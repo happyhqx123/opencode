@@ -453,8 +453,8 @@ export function RunQuestionBody(props: {
                             fg={other() ? props.theme.highlight : picked() ? props.theme.success : props.theme.text}
                           >
                             {info()?.multiple
-                              ? `[${picked() ? "✓" : " "}] Type your own answer`
-                              : "Type your own answer"}
+                              ? `[${picked() ? "✓" : " "}] 输入自定义答案`
+                              : "输入自定义答案"}
                           </text>
                         </box>
                         <Show when={!info()?.multiple}>
@@ -479,7 +479,7 @@ export function RunQuestionBody(props: {
                             minHeight={1}
                             maxHeight={4}
                             wrapMode="word"
-                            placeholder="Type your own answer"
+                            placeholder="输入自定义答案"
                             placeholderColor={props.theme.muted}
                             textColor={props.theme.text}
                             focusedTextColor={props.theme.text}
@@ -525,7 +525,7 @@ export function RunQuestionBody(props: {
           when={!disabled()}
           fallback={
             <text fg={props.theme.muted} wrapMode="word">
-              Waiting for question event...
+              等待问题事件...
             </text>
           }
         >
@@ -540,29 +540,29 @@ export function RunQuestionBody(props: {
               fallback={
                 <>
                   <text fg={props.theme.text}>
-                    enter <span style={{ fg: props.theme.muted }}>save</span>
+                    回车 <span style={{ fg: props.theme.muted }}>保存</span>
                   </text>
                   <text fg={props.theme.text}>
-                    esc <span style={{ fg: props.theme.muted }}>cancel</span>
+                    Esc <span style={{ fg: props.theme.muted }}>取消</span>
                   </text>
                 </>
               }
             >
               <Show when={!single()}>
                 <text fg={props.theme.text}>
-                  {"⇆"} <span style={{ fg: props.theme.muted }}>tab</span>
+                  {"⇆"} <span style={{ fg: props.theme.muted }}>切换</span>
                 </text>
               </Show>
               <Show when={!confirm()}>
                 <text fg={props.theme.text}>
-                  {"↑↓"} <span style={{ fg: props.theme.muted }}>select</span>
+                  {"↑↓"} <span style={{ fg: props.theme.muted }}>选择</span>
                 </text>
               </Show>
               <text fg={props.theme.text}>
-                enter <span style={{ fg: props.theme.muted }}>{verb()}</span>
+                回车 <span style={{ fg: props.theme.muted }}>{verb()}</span>
               </text>
               <text fg={props.theme.text}>
-                esc <span style={{ fg: props.theme.muted }}>dismiss</span>
+                Esc <span style={{ fg: props.theme.muted }}>关闭</span>
               </text>
             </Show>
           </box>

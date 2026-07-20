@@ -283,7 +283,7 @@ export function Session() {
       const result = await sdk.client.session.get({ sessionID }, { throwOnError: true })
       if (!result.data) {
         toast.show({
-          message: `Session not found: ${sessionID}`,
+          message: `会话未找到: ${sessionID}`,
           variant: "error",
           duration: 5000,
         })
@@ -428,7 +428,7 @@ export function Session() {
       sessionID,
     })
     const status = sync.data.session_status[sessionID]
-    if (status?.type === "retry") void DialogAlert.show(dialog, "Retry Error", status.message)
+    if (status?.type === "retry") void DialogAlert.show(dialog, "重试错误", status.message)
   }
 
   function moveFirstChild() {
@@ -457,10 +457,10 @@ export function Session() {
 
   const sessionCommandList = createMemo(() => [
     {
-      title: session()?.share?.url ? "Copy share link" : "Share session",
+      title: session()?.share?.url ? "复制分享链接" : "分享对话",
       value: "session.share",
       suggested: route.type === "session",
-      category: "Session",
+      category: "会话",
       enabled: sync.data.config.share !== "disabled",
       slash: {
         name: "share",
@@ -469,8 +469,8 @@ export function Session() {
         const copy = (url: string) =>
           clipboard
             .write?.(url)
-            .then(() => toast.show({ message: "Share URL copied to clipboard!", variant: "success" }))
-            .catch(() => toast.show({ message: "Failed to copy URL to clipboard", variant: "error" }))
+            .then(() => toast.show({ message: "分享链接已复制到剪贴板！", variant: "success" }))
+            .catch(() => toast.show({ message: "复制链接到剪贴板失败", variant: "error" }))
         const url = session()?.share?.url
         if (url) {
           await copy(url)
@@ -478,7 +478,7 @@ export function Session() {
           return
         }
         if (!kv.get("share_consent", false)) {
-          const ok = await DialogConfirm.show(dialog, "Share Session", "Are you sure you want to share it?")
+          const ok = await DialogConfirm.show(dialog, "分享会话", "确定要分享它吗？")
           if (ok !== true) return
           kv.set("share_consent", true)
         }
@@ -489,7 +489,7 @@ export function Session() {
           .then((res) => copy(res.data!.share!.url))
           .catch((error) => {
             toast.show({
-              message: error instanceof Error ? error.message : "Failed to share session",
+              message: error instanceof Error ? error.message : "分享会话失败",
               variant: "error",
             })
           })
@@ -497,9 +497,9 @@ export function Session() {
       },
     },
     {
-      title: "Rename session",
+      title: "重命名会话",
       value: "session.rename",
-      category: "Session",
+      category: "会话",
       slash: {
         name: "rename",
       },
@@ -508,9 +508,9 @@ export function Session() {
       },
     },
     {
-      title: "Jump to message",
+      title: "跳转到消息",
       value: "session.timeline",
-      category: "Session",
+      category: "会话",
       slash: {
         name: "timeline",
       },
@@ -530,9 +530,9 @@ export function Session() {
       },
     },
     {
-      title: "Fork session",
+      title: "分叉会话",
       value: "session.fork",
-      category: "Session",
+      category: "会话",
       slash: {
         name: "fork",
       },
@@ -552,9 +552,9 @@ export function Session() {
       },
     },
     {
-      title: "Compact session",
+      title: "压缩会话",
       value: "session.compact",
-      category: "Session",
+      category: "会话",
       slash: {
         name: "compact",
         aliases: ["summarize"],
@@ -564,7 +564,7 @@ export function Session() {
         if (!selectedModel) {
           toast.show({
             variant: "warning",
-            message: "Connect a provider to summarize this session",
+            message: "连接提供商以总结此对话",
             duration: 3000,
           })
           return
@@ -578,9 +578,9 @@ export function Session() {
       },
     },
     {
-      title: "Unshare session",
+      title: "取消分享会话",
       value: "session.unshare",
-      category: "Session",
+      category: "会话",
       enabled: !!session()?.share?.url,
       slash: {
         name: "unshare",
@@ -590,10 +590,10 @@ export function Session() {
           .unshare({
             sessionID: route.sessionID,
           })
-          .then(() => toast.show({ message: "Session unshared successfully", variant: "success" }))
+          .then(() => toast.show({ message: "对话取消分享成功", variant: "success" }))
           .catch((error) => {
             toast.show({
-              message: error instanceof Error ? error.message : "Failed to unshare session",
+              message: error instanceof Error ? error.message : "取消分享会话失败",
               variant: "error",
             })
           })
@@ -601,9 +601,9 @@ export function Session() {
       },
     },
     {
-      title: "Undo previous message",
+      title: "撤销上一条消息",
       value: "session.undo",
-      category: "Session",
+      category: "会话",
       slash: {
         name: "undo",
       },
@@ -638,9 +638,9 @@ export function Session() {
       },
     },
     {
-      title: "Redo",
+      title: "重做",
       value: "session.redo",
-      category: "Session",
+      category: "会话",
       enabled: !!session()?.revert?.messageID,
       slash: {
         name: "redo",
@@ -664,9 +664,9 @@ export function Session() {
       },
     },
     {
-      title: sidebarVisible() ? "Hide sidebar" : "Show sidebar",
+      title: sidebarVisible() ? "隐藏侧边栏" : "显示侧边栏",
       value: "session.sidebar.toggle",
-      category: "Session",
+      category: "会话",
       run: () => {
         batch(() => {
           const isVisible = sidebarVisible()
@@ -677,18 +677,18 @@ export function Session() {
       },
     },
     {
-      title: conceal() ? "Disable code concealment" : "Enable code concealment",
+      title: conceal() ? "禁用代码隐藏" : "启用代码隐藏",
       value: "session.toggle.conceal",
-      category: "Session",
+      category: "会话",
       run: () => {
         setConceal((prev) => !prev)
         dialog.clear()
       },
     },
     {
-      title: showTimestamps() ? "Hide timestamps" : "Show timestamps",
+      title: showTimestamps() ? "隐藏时间戳" : "显示时间戳",
       value: "session.toggle.timestamps",
-      category: "Session",
+      category: "会话",
       slash: {
         name: "timestamps",
         aliases: ["toggle-timestamps"],
@@ -701,11 +701,11 @@ export function Session() {
     {
       title: (() => {
         const next = nextThinkingMode(thinkingMode())
-        if (next === "hide") return "Collapse thinking"
-        return "Expand thinking"
+        if (next === "hide") return "收起思考"
+        return "展开思考"
       })(),
       value: "session.toggle.thinking",
-      category: "Session",
+      category: "会话",
       slash: {
         name: "thinking",
         aliases: ["toggle-thinking"],
@@ -716,36 +716,36 @@ export function Session() {
       },
     },
     {
-      title: showDetails() ? "Hide tool details" : "Show tool details",
+      title: showDetails() ? "隐藏工具详情" : "显示工具详情",
       value: "session.toggle.actions",
-      category: "Session",
+      category: "会话",
       run: () => {
         setShowDetails((prev) => !prev)
         dialog.clear()
       },
     },
     {
-      title: "Toggle session scrollbar",
+      title: "切换会话滚动条",
       value: "session.toggle.scrollbar",
-      category: "Session",
+      category: "会话",
       run: () => {
         setShowScrollbar((prev) => !prev)
         dialog.clear()
       },
     },
     {
-      title: showGenericToolOutput() ? "Hide generic tool output" : "Show generic tool output",
+      title: showGenericToolOutput() ? "隐藏通用工具输出" : "显示通用工具输出",
       value: "session.toggle.generic_tool_output",
-      category: "Session",
+      category: "会话",
       run: () => {
         setShowGenericToolOutput((prev) => !prev)
         dialog.clear()
       },
     },
     {
-      title: "Page up",
+      title: "向上翻页",
       value: "session.page.up",
-      category: "Session",
+      category: "会话",
       hidden: true,
       run: () => {
         scroll.scrollBy(-scroll.height / 2)
@@ -753,9 +753,9 @@ export function Session() {
       },
     },
     {
-      title: "Page down",
+      title: "向下翻页",
       value: "session.page.down",
-      category: "Session",
+      category: "会话",
       hidden: true,
       run: () => {
         scroll.scrollBy(scroll.height / 2)
@@ -763,9 +763,9 @@ export function Session() {
       },
     },
     {
-      title: "Line up",
+      title: "向上移动",
       value: "session.line.up",
-      category: "Session",
+      category: "会话",
       hidden: true,
       run: () => {
         scroll.scrollBy(-1)
@@ -773,9 +773,9 @@ export function Session() {
       },
     },
     {
-      title: "Line down",
+      title: "向下移动",
       value: "session.line.down",
-      category: "Session",
+      category: "会话",
       hidden: true,
       run: () => {
         scroll.scrollBy(1)
@@ -783,9 +783,9 @@ export function Session() {
       },
     },
     {
-      title: "Half page up",
+      title: "向上翻半页",
       value: "session.half.page.up",
-      category: "Session",
+      category: "会话",
       hidden: true,
       run: () => {
         scroll.scrollBy(-scroll.height / 4)
@@ -793,9 +793,9 @@ export function Session() {
       },
     },
     {
-      title: "Half page down",
+      title: "向下翻半页",
       value: "session.half.page.down",
-      category: "Session",
+      category: "会话",
       hidden: true,
       run: () => {
         scroll.scrollBy(scroll.height / 4)
@@ -803,9 +803,9 @@ export function Session() {
       },
     },
     {
-      title: "First message",
+      title: "第一条消息",
       value: "session.first",
-      category: "Session",
+      category: "会话",
       hidden: true,
       run: () => {
         scroll.scrollTo(0)
@@ -813,9 +813,9 @@ export function Session() {
       },
     },
     {
-      title: "Last message",
+      title: "最后一条消息",
       value: "session.last",
-      category: "Session",
+      category: "会话",
       hidden: true,
       run: () => {
         scroll.scrollTo(scroll.scrollHeight)
@@ -823,9 +823,9 @@ export function Session() {
       },
     },
     {
-      title: "Jump to last user message",
+      title: "跳转到最后一条用户消息",
       value: "session.messages_last_user",
-      category: "Session",
+      category: "会话",
       hidden: true,
       run: () => {
         const messages = sync.data.message[route.sessionID]
@@ -854,30 +854,30 @@ export function Session() {
       },
     },
     {
-      title: "Next message",
+      title: "下一条消息",
       value: "session.message.next",
-      category: "Session",
+      category: "会话",
       hidden: true,
       run: () => scrollToMessage("next", dialog),
     },
     {
-      title: "Previous message",
+      title: "上一条消息",
       value: "session.message.previous",
-      category: "Session",
+      category: "会话",
       hidden: true,
       run: () => scrollToMessage("prev", dialog),
     },
     {
-      title: "Copy last assistant message",
+      title: "复制最后一条助手消息",
       value: "messages.copy",
-      category: "Session",
+      category: "会话",
       run: () => {
         const revertID = session()?.revert?.messageID
         const lastAssistantMessage = messages().findLast(
           (msg) => msg.role === "assistant" && (!revertID || msg.id < revertID),
         )
         if (!lastAssistantMessage) {
-          toast.show({ message: "No assistant messages found", variant: "error" })
+          toast.show({ message: "未找到助手消息", variant: "error" })
           dialog.clear()
           return
         }
@@ -885,7 +885,7 @@ export function Session() {
         const parts = sync.data.part[lastAssistantMessage.id] ?? []
         const textParts = parts.filter((part) => part.type === "text")
         if (textParts.length === 0) {
-          toast.show({ message: "No text parts found in last assistant message", variant: "error" })
+          toast.show({ message: "最后一条助手消息中未找到文本部分", variant: "error" })
           dialog.clear()
           return
         }
@@ -896,7 +896,7 @@ export function Session() {
           .trim()
         if (!text) {
           toast.show({
-            message: "No text content found in last assistant message",
+            message: "最后一条助手消息中未找到文本内容",
             variant: "error",
           })
           dialog.clear()
@@ -905,15 +905,15 @@ export function Session() {
 
         clipboard
           .write?.(text)
-          .then(() => toast.show({ message: "Message copied to clipboard!", variant: "success" }))
-          .catch(() => toast.show({ message: "Failed to copy to clipboard", variant: "error" }))
+          .then(() => toast.show({ message: "消息已复制到剪贴板！", variant: "success" }))
+          .catch(() => toast.show({ message: "复制到剪贴板失败", variant: "error" }))
         dialog.clear()
       },
     },
     {
-      title: "Copy session transcript",
+      title: "复制会话记录",
       value: "session.copy",
-      category: "Session",
+      category: "会话",
       slash: {
         name: "copy",
       },
@@ -933,17 +933,17 @@ export function Session() {
             },
           )
           await clipboard.write?.(transcript)
-          toast.show({ message: "Session transcript copied to clipboard!", variant: "success" })
+          toast.show({ message: "对话记录已复制到剪贴板！", variant: "success" })
         } catch {
-          toast.show({ message: "Failed to copy session transcript", variant: "error" })
+          toast.show({ message: "复制对话记录失败", variant: "error" })
         }
         dialog.clear()
       },
     },
     {
-      title: "Export session transcript",
+      title: "导出会话记录",
       value: "session.export",
-      category: "Session",
+      category: "会话",
       slash: {
         name: "export",
       },
@@ -1007,18 +1007,18 @@ export function Session() {
               await writeExport(filepath, result)
             }
 
-            toast.show({ message: `Session exported to ${filename}`, variant: "success" })
+            toast.show({ message: `会话已导出至 ${filename}`, variant: "success" })
           }
         } catch {
-          toast.show({ message: "Failed to export session", variant: "error" })
+          toast.show({ message: "导出对话失败", variant: "error" })
         }
         dialog.clear()
       },
     },
     {
-      title: "Background subagents",
+      title: "后台子代理",
       value: "session.background",
-      category: "Session",
+      category: "会话",
       hidden: true,
       enabled: foregroundTasks().length > 0,
       run: () => {
@@ -1030,9 +1030,9 @@ export function Session() {
       },
     },
     {
-      title: "Go to child session",
+      title: "转到子会话",
       value: "session.child.first",
-      category: "Session",
+      category: "会话",
       hidden: true,
       run: () => {
         dialog.clear()
@@ -1040,9 +1040,9 @@ export function Session() {
       },
     },
     {
-      title: "Go to parent session",
+      title: "转到父会话",
       value: "session.parent",
-      category: "Session",
+      category: "会话",
       hidden: true,
       enabled: !!session()?.parentID,
       run: childSessionHandler(() => {
@@ -1057,9 +1057,9 @@ export function Session() {
       }),
     },
     {
-      title: "Next child session",
+      title: "下一个子会话",
       value: "session.child.next",
-      category: "Session",
+      category: "会话",
       hidden: true,
       enabled: !!session()?.parentID,
       run: childSessionHandler(() => {
@@ -1068,9 +1068,9 @@ export function Session() {
       }),
     },
     {
-      title: "Previous child session",
+      title: "上一个子会话",
       value: "session.child.previous",
-      category: "Session",
+      category: "会话",
       hidden: true,
       enabled: !!session()?.parentID,
       run: childSessionHandler(() => {
@@ -1196,8 +1196,8 @@ export function Session() {
                           const handleUnrevert = async () => {
                             const confirmed = await DialogConfirm.show(
                               dialog,
-                              "Confirm Redo",
-                              "Are you sure you want to restore the reverted messages?",
+                              "确认重做",
+                              "确定要恢复已还原的消息吗？",
                             )
                             if (confirmed) {
                               keymap.dispatchCommand("session.redo")
@@ -1411,7 +1411,7 @@ function UserMessage(props: {
                     return (
                       <text fg={theme.text}>
                         <span style={{ bg: theme.secondary, fg: theme.background }}>
-                          {directory ? " Directory " : " File "}
+                          {directory ? " 目录 " : " 文件 "}
                         </span>
                         <span style={{ bg: theme.backgroundElement, fg: theme.textMuted }}> {file.filename} </span>
                       </text>
@@ -1443,7 +1443,7 @@ function UserMessage(props: {
         <box
           marginTop={1}
           border={["top"]}
-          title=" Compaction "
+          title=" 压缩 "
           titleAlignment="center"
           borderColor={theme.borderActive}
         />
@@ -1649,7 +1649,7 @@ function ReasoningHeader(props: {
     <Switch>
       <Match when={!props.done}>
         <box flexDirection="row">
-          <Spinner color={fg()}>{props.title ? "Thinking: " + props.title : "Thinking"}</Spinner>
+          <Spinner color={fg()}>{props.title ? "思考: " + props.title : "思考"}</Spinner>
         </box>
       </Match>
       <Match when={true}>
@@ -1657,7 +1657,7 @@ function ReasoningHeader(props: {
           <Show when={props.toggleable}>
             <span>{props.open ? "- " : "+ "}</span>
           </Show>
-          <span>Thought</span>
+          <span>思考</span>
           <Show when={props.title || props.duration}>
             <span>: </span>
           </Show>
@@ -1805,7 +1805,7 @@ function GenericTool(props: ToolProps) {
     <Show
       when={props.output && ctx.showGenericToolOutput()}
       fallback={
-        <InlineTool icon="⚙" pending="Writing command..." complete={true} part={props.part}>
+        <InlineTool icon="⚙" pending="正在执行命令..." complete={true} part={props.part}>
           {props.tool} {input(props.input)}
         </InlineTool>
       }
@@ -1818,7 +1818,7 @@ function GenericTool(props: ToolProps) {
         <box gap={1}>
           <text fg={theme.text}>{limited()}</text>
           <Show when={collapsed().overflow}>
-            <text fg={theme.textMuted}>{expanded() ? "Click to collapse" : "Click to expand"}</text>
+            <text fg={theme.textMuted}>{expanded() ? "点击折叠" : "点击展开"}</text>
           </Show>
         </box>
       </BlockTool>
@@ -2081,13 +2081,13 @@ function Shell(props: ToolProps) {
               <text fg={theme.text}>{limited()}</text>
             </Show>
             <Show when={collapsed().overflow}>
-              <text fg={theme.textMuted}>{expanded() ? "Click to collapse" : "Click to expand"}</text>
+              <text fg={theme.textMuted}>{expanded() ? "点击折叠" : "点击展开"}</text>
             </Show>
           </box>
         </BlockTool>
       </Match>
       <Match when={true}>
-        <InlineTool icon="$" pending="Writing command..." complete={stringValue(props.input.command)} part={props.part}>
+        <InlineTool icon="$" pending="正在执行命令..." complete={stringValue(props.input.command)} part={props.part}>
           {stringValue(props.input.command)}
         </InlineTool>
       </Match>
@@ -2105,7 +2105,7 @@ function Write(props: ToolProps) {
   return (
     <Switch>
       <Match when={props.metadata.diagnostics !== undefined}>
-        <BlockTool title={"# Wrote " + pathFormatter.format(stringValue(props.input.filePath))} part={props.part}>
+        <BlockTool title={"# 已写入 " + pathFormatter.format(stringValue(props.input.filePath))} part={props.part}>
           <line_number fg={theme.textMuted} minWidth={3} paddingRight={1}>
             <code
               conceal={false}
@@ -2121,7 +2121,7 @@ function Write(props: ToolProps) {
       <Match when={true}>
         <InlineTool
           icon="←"
-          pending="Preparing write..."
+          pending="正在准备写入..."
           complete={stringValue(props.input.filePath)}
           part={props.part}
         >
@@ -2135,11 +2135,11 @@ function Write(props: ToolProps) {
 function Glob(props: ToolProps) {
   const pathFormatter = usePathFormatter()
   return (
-    <InlineTool icon="✱" pending="Finding files..." complete={stringValue(props.input.pattern)} part={props.part}>
+    <InlineTool icon="✱" pending="正在查找文件..." complete={stringValue(props.input.pattern)} part={props.part}>
       Glob "{stringValue(props.input.pattern)}"{" "}
       <Show when={stringValue(props.input.path)}>in {pathFormatter.format(stringValue(props.input.path))} </Show>
       <Show when={numberValue(props.metadata.count)}>
-        ({numberValue(props.metadata.count)} {numberValue(props.metadata.count) === 1 ? "match" : "matches"})
+        ({numberValue(props.metadata.count)} 个匹配)
       </Show>
     </InlineTool>
   )
@@ -2160,7 +2160,7 @@ function Read(props: ToolProps) {
     <>
       <InlineTool
         icon="→"
-        pending="Reading file..."
+        pending="正在读取文件..."
         complete={stringValue(props.input.filePath)}
         spinner={isRunning()}
         part={props.part}
@@ -2183,7 +2183,7 @@ function Read(props: ToolProps) {
 function Grep(props: ToolProps) {
   const pathFormatter = usePathFormatter()
   return (
-    <InlineTool icon="✱" pending="Searching content..." complete={stringValue(props.input.pattern)} part={props.part}>
+    <InlineTool icon="✱" pending="正在搜索内容..." complete={stringValue(props.input.pattern)} part={props.part}>
       Grep "{stringValue(props.input.pattern)}"{" "}
       <Show when={stringValue(props.input.path)}>in {pathFormatter.format(stringValue(props.input.path))} </Show>
       <Show when={numberValue(props.metadata.matches)}>
@@ -2195,7 +2195,7 @@ function Grep(props: ToolProps) {
 
 function WebFetch(props: ToolProps) {
   return (
-    <InlineTool icon="%" pending="Fetching from the web..." complete={stringValue(props.input.url)} part={props.part}>
+    <InlineTool icon="%" pending="正在从网页获取..." complete={stringValue(props.input.url)} part={props.part}>
       WebFetch {stringValue(props.input.url)}
     </InlineTool>
   )
@@ -2203,7 +2203,7 @@ function WebFetch(props: ToolProps) {
 
 function WebSearch(props: ToolProps) {
   return (
-    <InlineTool icon="◈" pending="Searching web..." complete={stringValue(props.input.query)} part={props.part}>
+    <InlineTool icon="◈" pending="搜索网页中..." complete={stringValue(props.input.query)} part={props.part}>
       {webSearchProviderLabel(props.metadata.provider)} "{stringValue(props.input.query)}"{" "}
       <Show when={numberValue(props.metadata.numResults)}>({numberValue(props.metadata.numResults)} results)</Show>
     </InlineTool>
@@ -2262,7 +2262,7 @@ function Task(props: ToolProps) {
     if (!description) return ""
     let content = [
       formatSubagentTitle(
-        Locale.titlecase(stringValue(props.input.subagent_type) ?? "General"),
+        Locale.titlecase(stringValue(props.input.subagent_type) ?? "通用"),
         description,
         props.metadata.background === true,
       ),
@@ -2293,14 +2293,14 @@ function Task(props: ToolProps) {
       color={retry() ? theme.error : undefined}
       spinner={isRunning()}
       complete={stringValue(props.input.description)}
-      pending="Delegating..."
+      pending="正在委派..."
       part={props.part}
       onClick={() => {
         if (sessionID()) {
           navigate({ type: "session", sessionID: sessionID()! })
         }
         const status = retry()
-        if (status) void DialogAlert.show(dialog, "Retry Error", status.message)
+        if (status) void DialogAlert.show(dialog, "重试错误", status.message)
       }}
     >
       {content()}
@@ -2309,15 +2309,15 @@ function Task(props: ToolProps) {
 }
 
 export function formatSubagentToolcalls(count: number) {
-  return `${count} toolcall${count === 1 ? "" : "s"}`
+  return `${count} 次工具调用`
 }
 
 export function formatSubagentTitle(agent: string, description: string, background: boolean) {
-  return `${agent} Task${background ? " (background)" : ""} — ${description}`
+  return `${agent} 任务${background ? "（后台）" : ""} — ${description}`
 }
 
 export function formatSubagentRetry(attempt: number, message: string) {
-  return `Retrying (attempt ${attempt}) · ${message}`
+  return `重试中（第 ${attempt} 次）· ${message}`
 }
 
 export function formatCompletedSubagentDetail(toolcalls: number, duration: string) {
@@ -2352,7 +2352,7 @@ function Execute(props: ToolProps) {
     const lines = ["execute"]
     for (const call of calls()) {
       const args = input(call.input ?? {})
-      lines.push(`↳ ${call.tool}${args ? ` ${args}` : ""}${call.status === "error" ? " (failed)" : ""}`)
+      lines.push(`↳ ${call.tool}${args ? ` ${args}` : ""}${call.status === "error" ? " (失败)" : ""}`)
     }
     return lines.join("\n")
   })
@@ -2404,7 +2404,7 @@ function Edit(props: ToolProps) {
   return (
     <Switch>
       <Match when={stringValue(props.metadata.diff) !== undefined}>
-        <BlockTool title={"← Edit " + pathFormatter.format(stringValue(props.input.filePath))} part={props.part}>
+        <BlockTool title={"← 编辑 " + pathFormatter.format(stringValue(props.input.filePath))} part={props.part}>
           <box paddingLeft={1}>
             <diff
               diff={diffContent()}
@@ -2430,7 +2430,7 @@ function Edit(props: ToolProps) {
         </BlockTool>
       </Match>
       <Match when={true}>
-        <InlineTool icon="←" pending="Preparing edit..." complete={stringValue(props.input.filePath)} part={props.part}>
+        <InlineTool icon="←" pending="正在准备编辑..." complete={stringValue(props.input.filePath)} part={props.part}>
           Edit {pathFormatter.format(stringValue(props.input.filePath))} {input({ replaceAll: props.input.replaceAll })}
         </InlineTool>
       </Match>
@@ -2506,7 +2506,7 @@ function ApplyPatch(props: ToolProps) {
         </For>
       </Match>
       <Match when={true}>
-        <InlineTool icon="%" pending="Preparing patch..." failure="Patch failed" complete={false} part={props.part}>
+        <InlineTool icon="%" pending="正在准备补丁..." failure="补丁失败" complete={false} part={props.part}>
           Patch
         </InlineTool>
       </Match>
@@ -2519,7 +2519,7 @@ function TodoWrite(props: ToolProps) {
   return (
     <Switch>
       <Match when={parseTodos(props.metadata.todos).length}>
-        <BlockTool title="# Todos" part={props.part}>
+        <BlockTool title="# 待办事项" part={props.part}>
           <box>
             <For each={todos()}>{(todo) => <TodoItem status={todo.status} content={todo.content} />}</For>
           </box>
@@ -2528,8 +2528,8 @@ function TodoWrite(props: ToolProps) {
       <Match when={true}>
         <InlineTool
           icon="⚙"
-          pending="Updating todos..."
-          failure="Todo update failed"
+          pending="正在更新待办..."
+          failure="待办更新失败"
           complete={false}
           part={props.part}
         >
@@ -2547,14 +2547,14 @@ function Question(props: ToolProps) {
   const count = createMemo(() => questions().length)
 
   function format(answer?: ReadonlyArray<string>) {
-    if (!answer?.length) return "(no answer)"
+    if (!answer?.length) return "(无回答)"
     return answer.join(", ")
   }
 
   return (
     <Switch>
       <Match when={answers()}>
-        <BlockTool title="# Questions" part={props.part}>
+        <BlockTool title="# 问题" part={props.part}>
           <box gap={1}>
             <For each={questions()}>
               {(q, i) => (
@@ -2568,7 +2568,7 @@ function Question(props: ToolProps) {
         </BlockTool>
       </Match>
       <Match when={true}>
-        <InlineTool icon="→" pending="Asking questions..." complete={count()} part={props.part}>
+        <InlineTool icon="→" pending="正在提问..." complete={count()} part={props.part}>
           Asked {count()} question{count() !== 1 ? "s" : ""}
         </InlineTool>
       </Match>
@@ -2578,7 +2578,7 @@ function Question(props: ToolProps) {
 
 function Skill(props: ToolProps) {
   return (
-    <InlineTool icon="→" pending="Loading skill..." complete={stringValue(props.input.name)} part={props.part}>
+    <InlineTool icon="→" pending="正在加载技能..." complete={stringValue(props.input.name)} part={props.part}>
       Skill "{stringValue(props.input.name)}"
     </InlineTool>
   )

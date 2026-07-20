@@ -298,7 +298,7 @@ function taskStatus(part: ToolPart): FooterSubagentTab["status"] {
   }
 
   if (part.state.status === "error") {
-    if (metadata(part, "interrupted") === true || text(part.state.error) === "Tool execution aborted") {
+    if (metadata(part, "interrupted") === true || text(part.state.error) === "工具执行已中止") {
       return "cancelled"
     }
 
@@ -446,7 +446,7 @@ function ensureBlockerTab(
 
     const next = {
       ...current,
-      description: kind === "permission" ? "Pending permission" : "Pending question",
+      description: kind === "permission" ? "待处理权限" : "待处理问题",
       status: "running" as const,
       title: current.title ?? title,
       lastUpdatedAt: Date.now(),
@@ -464,7 +464,7 @@ function ensureBlockerTab(
     partID: `bootstrap:${sessionID}`,
     callID: `bootstrap:${sessionID}`,
     label: text(title) ?? Locale.titlecase(kind),
-    description: kind === "permission" ? "Pending permission" : "Pending question",
+    description: kind === "permission" ? "待处理权限" : "待处理问题",
     status: "running",
     lastUpdatedAt: Date.now(),
   })

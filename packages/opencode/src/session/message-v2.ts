@@ -625,7 +625,7 @@ export function fromError(
     case (e as SystemError)?.code === "ECONNRESET":
       return new APIError(
         {
-          message: "Connection reset by server",
+          message: "服务器重置了连接",
           isRetryable: true,
           metadata: {
             code: (e as SystemError).code ?? "",
@@ -641,7 +641,7 @@ export function fromError(
       }
       return new APIError(
         {
-          message: "Response decompression failed",
+          message: "响应解压失败",
           isRetryable: true,
           metadata: {
             code: (e as FetchDecompressionError).code,

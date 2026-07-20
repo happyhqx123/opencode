@@ -95,14 +95,14 @@ async function startOAuthServer(): Promise<void> {
           return
         }
         if (!body.access_token) {
-          pendingOAuth.reject(new Error("Missing access_token in callback"))
+          pendingOAuth.reject(new Error("回调中缺少 access_token"))
           pendingOAuth = undefined
           res.writeHead(400, { "Content-Type": "application/json" })
           res.end(JSON.stringify({ error: "missing_access_token" }))
           return
         }
         if (body.state !== pendingOAuth.state) {
-          pendingOAuth.reject(new Error("Invalid state - potential CSRF attack"))
+          pendingOAuth.reject(new Error("状态无效 - 可能存在 CSRF 攻击"))
           pendingOAuth = undefined
           res.writeHead(400, { "Content-Type": "application/json" })
           res.end(JSON.stringify({ error: "invalid_state" }))
@@ -122,7 +122,7 @@ async function startOAuthServer(): Promise<void> {
     }
 
     res.writeHead(404)
-    res.end("Not found")
+    res.end("未找到")
   })
 
   await new Promise<void>((resolve, reject) => {
@@ -273,7 +273,7 @@ export async function DigitalOceanAuthPlugin(input: PluginInput): Promise<Hooks>
       methods: [
         {
           type: "oauth",
-          label: "Login with DigitalOcean",
+          label: "通过 DigitalOcean 登录",
           async authorize() {
             await startOAuthServer()
             const state = generateState()
@@ -283,7 +283,7 @@ export async function DigitalOceanAuthPlugin(input: PluginInput): Promise<Hooks>
             return {
               url,
               instructions:
-                "Sign in to DigitalOcean in your browser. OpenCode will use your DigitalOcean API token directly for inference and load your Inference Routers. Re-run /connect to refresh routers later.",
+                "在浏览器中登录 DigitalOcean。OpenCode 将直接使用您的 DigitalOcean API 令牌进行推理并加载推理路由器。稍后重新运行 /connect 以刷新路由器。",
               method: "auto" as const,
               async callback() {
                 try {
@@ -317,7 +317,7 @@ export async function DigitalOceanAuthPlugin(input: PluginInput): Promise<Hooks>
         },
         {
           type: "api",
-          label: "Paste Model Access Key",
+          label: "粘贴 Model Access Key",
         },
       ],
     },

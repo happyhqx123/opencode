@@ -41,7 +41,7 @@ export async function openEditor(input: { value: string; renderer: CliRenderer; 
       child.on("error", reject)
       child.on("exit", (code, signal) => {
         if (code === 0) return resolve()
-        reject(new Error(`Editor exited with ${signal ? `signal ${signal}` : `code ${code}`}`))
+        reject(new Error(`外部编辑器已退出 (${signal ? `信号 ${signal}` : `代码 ${code}`})`))
       })
     })
     return (await readFile(file, "utf8")) || undefined

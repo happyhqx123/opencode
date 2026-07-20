@@ -11,16 +11,16 @@ const cli = yargs(hideBin(process.argv))
   .version("version", "show version number", InstallationVersion)
   .alias("version", "v")
   .option("print-logs", {
-    describe: "print logs to stderr",
+    describe: "将日志输出到 stderr",
     type: "boolean",
   })
   .option("log-level", {
-    describe: "log level",
+    describe: "日志级别",
     type: "string",
     choices: ["DEBUG", "INFO", "WARN", "ERROR"],
   })
   .option("pure", {
-    describe: "run without external plugins",
+    describe: "不加载外部插件运行",
     type: "boolean",
   })
   .middleware((opts) => {

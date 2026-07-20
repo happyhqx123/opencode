@@ -47,7 +47,7 @@ export function DialogMcp() {
   const actions = createMemo(() => [
     {
       command: "dialog.mcp.toggle",
-      title: "toggle",
+      title: "切换",
       onTrigger: async (option: DialogSelectOption<string>) => {
         // Prevent toggling while an operation is already in progress
         if (loading() !== null) return
@@ -60,10 +60,10 @@ export function DialogMcp() {
           if (status.data) {
             sync.set("mcp", status.data)
           } else {
-            console.error("Failed to refresh MCP status: no data returned")
+            console.error("刷新 MCP 状态失败：无数据返回")
           }
         } catch (error) {
-          console.error("Failed to toggle MCP:", error)
+          console.error("切换 MCP 失败：", error)
         } finally {
           setLoading(null)
         }
@@ -74,7 +74,7 @@ export function DialogMcp() {
   return (
     <DialogSelect
       ref={setRef}
-      title="MCPs"
+      title="MCP"
       options={options()}
       actions={actions()}
       onSelect={(_option) => {

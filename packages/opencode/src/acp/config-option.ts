@@ -58,7 +58,7 @@ export function buildEffortSelectOption(input: {
   return {
     id: "effort",
     name: "Effort",
-    description: "Available effort levels for this model",
+    description: "此模型可用的 effort 级别",
     category: "thought_level",
     type: "select",
     currentValue: selectVariant(input.currentVariant, input.variants),

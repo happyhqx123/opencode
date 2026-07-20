@@ -414,7 +414,7 @@ export function RunFooterView(props: RunFooterViewProps) {
       return stateStatus()
     }
 
-    return shell() ? "Shell mode" : ""
+    return shell() ? "终端模式" : ""
   })
   const activityMeta = createMemo(() => {
     if (!responsive().statusline.showActivityMeta || usage().length === 0) {
@@ -503,14 +503,14 @@ export function RunFooterView(props: RunFooterViewProps) {
     commands: [
       {
         name: "command.palette.show",
-        title: "Open command palette",
-        category: "Prompt",
+        title: "打开命令面板",
+        category: "提示",
         run: openCommand,
       },
       {
         name: "variant.cycle",
-        title: "Cycle model variant",
-        category: "Model",
+        title: "切换模型变体",
+        category: "模型",
         run: props.onCycle,
       },
     ],
@@ -527,8 +527,8 @@ export function RunFooterView(props: RunFooterViewProps) {
     commands: [
       {
         name: "session.background",
-        title: "Background subagents",
-        category: "Session",
+        title: "后台子智能体",
+        category: "会话",
         run: () => props.onBackground?.(),
       },
     ],
@@ -541,8 +541,8 @@ export function RunFooterView(props: RunFooterViewProps) {
     commands: [
       {
         name: "session.child.first",
-        title: "View subagents",
-        category: "Session",
+        title: "查看子智能体",
+        category: "会话",
         run: openSubagentMenu,
       },
     ],
@@ -555,8 +555,8 @@ export function RunFooterView(props: RunFooterViewProps) {
     commands: [
       {
         name: "session.queued_prompts",
-        title: "Manage queued prompts",
-        category: "Session",
+        title: "管理已排队的提示",
+        category: "会话",
         run: openQueuedMenu,
       },
     ],

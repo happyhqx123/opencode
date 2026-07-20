@@ -7,18 +7,18 @@ import { Process } from "@/util/process"
 
 export const PrCommand = effectCmd({
   command: "pr <number>",
-  describe: "fetch and checkout a GitHub PR branch, then run opencode",
+  describe: "获取并检出 GitHub PR 分支，然后运行 opencode",
   builder: (yargs) =>
     yargs.positional("number", {
       type: "number",
-      describe: "PR number to checkout",
+      describe: "要检出的 PR 编号",
       demandOption: true,
     }),
   handler: Effect.fn("Cli.pr")(function* (args) {
     const ctx = yield* InstanceRef
-    if (!ctx) return yield* fail("Could not load instance context")
+    if (!ctx) return yield* fail("无法加载实例上下文")
     if (ctx.project.vcs !== "git") {
-      return yield* fail("Could not find git repository. Please run this command from a git repository.")
+      return yield* fail("未找到 git 仓库。请在 git 仓库中运行此命令。")
     }
 
     const git = yield* Git.Service
@@ -26,13 +26,13 @@ export const PrCommand = effectCmd({
 
     const prNumber = args.number
     const localBranchName = `pr/${prNumber}`
-    UI.println(`Fetching and checking out PR #${prNumber}...`)
+    UI.println(`正在获取并检出 PR #${prNumber}...`)
 
     const checkout = yield* Effect.promise(() =>
       Process.run(["gh", "pr", "checkout", `${prNumber}`, "--branch", localBranchName, "--force"], { nothrow: true }),
     )
     if (checkout.code !== 0) {
-      return yield* fail(`Failed to checkout PR #${prNumber}. Make sure you have gh CLI installed and authenticated.`)
+      return yield* fail(`检出 PR #${prNumber} 失败。请确保已安装并认证 gh CLI。`)
     }
 
     const prInfoResult = yield* Effect.promise(() =>
@@ -64,7 +64,7 @@ export const PrCommand = effectCmd({
           yield* git.run(["remote", "add", remoteName, `https://github.com/${forkOwner}/${forkName}.git`], {
             cwd: worktree,
           })
-          UI.println(`Added fork remote: ${remoteName}`)
+          UI.println(`已添加 fork 远程: ${remoteName}`)
         }
 
         yield* git.run(["branch", `--set-upstream-to=${remoteName}/${prInfo.headRefName}`, localBranchName], {
@@ -76,8 +76,8 @@ export const PrCommand = effectCmd({
         const sessionMatch = prInfo.body.match(/https:\/\/opncd\.ai\/s\/([a-zA-Z0-9_-]+)/)
         if (sessionMatch) {
           const sessionUrl = sessionMatch[0]
-          UI.println(`Found opencode session: ${sessionUrl}`)
-          UI.println(`Importing session...`)
+          UI.println(`发现 opencode 会话: ${sessionUrl}`)
+          UI.println(`正在导入会话...`)
 
           const importResult = yield* Effect.promise(() =>
             Process.text(["opencode", "import", sessionUrl], { nothrow: true }),
@@ -86,16 +86,16 @@ export const PrCommand = effectCmd({
             const sessionIdMatch = importResult.text.trim().match(/Imported session: ([a-zA-Z0-9_-]+)/)
             if (sessionIdMatch) {
               sessionId = sessionIdMatch[1]
-              UI.println(`Session imported: ${sessionId}`)
+              UI.println(`会话已导入: ${sessionId}`)
             }
           }
         }
       }
     }
 
-    UI.println(`Successfully checked out PR #${prNumber} as branch '${localBranchName}'`)
+    UI.println(`已成功检出 PR #${prNumber} 到分支 '${localBranchName}'`)
     UI.println()
-    UI.println("Starting opencode...")
+    UI.println("正在启动 opencode...")
     UI.println()
 
     const opencodeArgs = sessionId ? ["-s", sessionId] : []
@@ -109,7 +109,7 @@ export const PrCommand = effectCmd({
         }).exited,
     )
     // Match legacy throw semantics — propagate as a defect so the top-level
-    // index.ts catch handles it identically (exit 1, "Unexpected error" banner).
+    // index.ts catch handles it identically (exit 1, "意外错误" banner).
     if (code !== 0) return yield* Effect.die(new Error(`opencode exited with code ${code}`))
   }),
 })

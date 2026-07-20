@@ -896,7 +896,7 @@ async function installPluginBySpec(
   if (!state) {
     return {
       ok: false,
-      message: "Plugin runtime is not ready.",
+      message: "插件运行时未就绪。",
     }
   }
 
@@ -904,7 +904,7 @@ async function installPluginBySpec(
   if (!spec) {
     return {
       ok: false,
-      message: "Plugin package name is required",
+      message: "插件包名称为必填项",
     }
   }
 
@@ -912,7 +912,7 @@ async function installPluginBySpec(
   if (!dir.directory) {
     return {
       ok: false,
-      message: "Paths are still syncing. Try again in a moment.",
+      message: "路径仍在同步中，请稍后重试。",
     }
   }
 

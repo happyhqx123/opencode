@@ -965,22 +965,28 @@ export class RunFooter implements FooterApi {
   // second press within 5 seconds fires onInterrupt. The timer resets the
   // counter if the user doesn't follow through.
   private handleInterrupt = (): boolean => {
+    console.log("[DEBUG:footer.handleInterrupt] called, phase=", this.state().phase, "isClosed=", this.isClosed, "interrupt=", this.state().interrupt)
     if (this.isClosed || this.state().phase !== "running") {
+      console.log("[DEBUG:footer.handleInterrupt] EARLY RETURN: isClosed=", this.isClosed, "phase=", this.state().phase)
       return false
     }
 
     const next = this.state().interrupt + 1
+    console.log("[DEBUG:footer.handleInterrupt] arming, next=", next)
     this.patch({ interrupt: next })
 
     if (next < 2) {
       this.armInterruptTimer()
+      console.log("[DEBUG:footer.handleInterrupt] first press, armed timer")
       return true
     }
 
     this.clearInterruptTimer()
     this.patch({ interrupt: 0 })
     this.setNotice("interrupting")
+    console.log("[DEBUG:footer.handleInterrupt] second press, calling options.onInterrupt...")
     this.options.onInterrupt?.()
+    console.log("[DEBUG:footer.handleInterrupt] done calling onInterrupt")
     return true
   }
 

@@ -128,14 +128,14 @@ function getEditorRangeLabel(selection: EditorSelection["ranges"][number]) {
 function formatEditorContext(selection: EditorSelection) {
   const selected = selection.ranges.filter(hasEditorRangeSelection)
   if (selected.length === 0)
-    return `<system-reminder>Note: The user opened the file "${selection.filePath}". This may or may not be relevant to the current task.</system-reminder>\n`
+    return `<system-reminder>注意：用户打开了文件 "${selection.filePath}"。这可能与当前任务相关也可能无关。</system-reminder>\n`
 
   const ranges = selected.map((range, index) => {
-    const prefix = selected.length > 1 ? `Selection ${index + 1}: ` : ""
-    return `Note: The user selected ${prefix}${getEditorRangeLabel(range)} from "${selection.filePath}". \`\`\`${range.text}\`\`\`\n\n`
+    const prefix = selected.length > 1 ? `选择 ${index + 1}: ` : ""
+    return `注意：用户选中了 ${prefix}${getEditorRangeLabel(range)}（来自 "${selection.filePath}"）。\`\`\`${range.text}\`\`\`\n\n`
   })
 
-  return `<system-reminder>${ranges.join("\n")} This may or may not be relevant to the current task.</system-reminder>\n`
+  return `<system-reminder>${ranges.join("\n")} 这可能与当前任务相关也可能无关。</system-reminder>\n`
 }
 
 let stashed: { prompt: PromptInfo; cursor: number } | undefined
@@ -216,7 +216,7 @@ export function Prompt(props: PromptProps) {
   function promptModelWarning() {
     toast.show({
       variant: "warning",
-      message: "Connect a provider to send prompts",
+      message: "连接提供商以发送提示",
       duration: 3000,
     })
     if (sync.data.provider.length === 0) {
@@ -334,9 +334,9 @@ export function Prompt(props: PromptProps) {
   const promptCommands = createMemo(() =>
     [
       {
-        title: "Clear prompt",
+        title: "清空提示",
         name: "prompt.clear",
-        category: "Prompt",
+        category: "提示",
         hidden: true,
         run: () => {
           clearPrompt()
@@ -344,9 +344,9 @@ export function Prompt(props: PromptProps) {
         },
       },
       {
-        title: "Submit prompt",
+        title: "提交提示",
         name: "prompt.submit",
-        category: "Prompt",
+        category: "提示",
         hidden: true,
         run: async () => {
           if (!input.focused) return
@@ -357,9 +357,9 @@ export function Prompt(props: PromptProps) {
         },
       },
       {
-        title: "Remove editor context",
+        title: "移除编辑器上下文",
         name: "prompt.editor_context.clear",
-        category: "Prompt",
+        category: "提示",
         enabled: Boolean(editorContext()),
         run: () => {
           dismissEditorContext()
@@ -367,9 +367,9 @@ export function Prompt(props: PromptProps) {
         },
       },
       {
-        title: "Paste",
+        title: "粘贴",
         name: "prompt.paste",
-        category: "Prompt",
+        category: "提示",
         hidden: true,
         run: async (ctx: CommandContext<Renderable, KeyEvent>) => {
           ctx.event.preventDefault()
@@ -389,9 +389,9 @@ export function Prompt(props: PromptProps) {
         },
       },
       {
-        title: "Interrupt session",
+        title: "中断会话",
         name: "session.interrupt",
-        category: "Session",
+        category: "会话",
         hidden: true,
         enabled: status().type !== "idle",
         run: () => {
@@ -420,8 +420,8 @@ export function Prompt(props: PromptProps) {
         },
       },
       {
-        title: "Open editor",
-        category: "Session",
+        title: "打开编辑器",
+        category: "会话",
         name: "prompt.editor",
         slashName: "editor",
         run: async () => {
@@ -512,9 +512,9 @@ export function Prompt(props: PromptProps) {
         },
       },
       {
-        title: "Skills",
+        title: "技能",
         name: "prompt.skills",
-        category: "Prompt",
+        category: "提示",
         slashName: "skills",
         run: () => {
           dialog.replace(() => (
@@ -532,10 +532,10 @@ export function Prompt(props: PromptProps) {
         },
       },
       {
-        title: "Warp",
-        desc: "Change the workspace for the session",
+        title: "迁移",
+        desc: "更改会话的工作区",
         name: "workspace.set",
-        category: "Session",
+        category: "会话",
         enabled: Flag.OPENCODE_EXPERIMENTAL_WORKSPACES,
         slashName: "warp",
         run: () => {
@@ -543,10 +543,10 @@ export function Prompt(props: PromptProps) {
         },
       },
       {
-        title: "Move session",
-        desc: "Move to another project dir",
+        title: "移动会话",
+        desc: "移动到另一个项目目录",
         name: "session.move",
-        category: "Session",
+        category: "会话",
         slashName: "move",
         run: () => {
           move.open()
@@ -735,9 +735,9 @@ export function Prompt(props: PromptProps) {
   const stashCommands = createMemo(() =>
     [
       {
-        title: "Stash prompt",
+        title: "暂存提示",
         name: "prompt.stash",
-        category: "Prompt",
+        category: "提示",
         enabled: !!store.prompt.input,
         run: () => {
           if (!store.prompt.input) return
@@ -753,9 +753,9 @@ export function Prompt(props: PromptProps) {
         },
       },
       {
-        title: "Stash pop",
+        title: "恢复暂存",
         name: "prompt.stash.pop",
-        category: "Prompt",
+        category: "提示",
         enabled: stash.list().length > 0,
         run: () => {
           const entry = stash.pop()
@@ -769,9 +769,9 @@ export function Prompt(props: PromptProps) {
         },
       },
       {
-        title: "Stash list",
+        title: "暂存列表",
         name: "prompt.stash.list",
-        category: "Prompt",
+        category: "提示",
         enabled: stash.list().length > 0,
         run: () => {
           dialog.replace(() => (
@@ -828,8 +828,8 @@ export function Prompt(props: PromptProps) {
       bindings: [
         {
           key: "!",
-          desc: "Shell mode",
-          group: "Prompt",
+          desc: "Shell 模式",
+          group: "提示",
           cmd: () => {
             setStore("placeholder", randomIndex(shell().length))
             setStore("mode", "shell")
@@ -843,7 +843,7 @@ export function Prompt(props: PromptProps) {
     return {
       target: inputTarget,
       enabled: inputTarget() !== undefined && store.mode === "shell",
-      bindings: [{ key: "escape", desc: "Exit shell mode", group: "Prompt", cmd: () => setStore("mode", "normal") }],
+      bindings: [{ key: "escape", desc: "退出 Shell 模式", group: "提示", cmd: () => setStore("mode", "normal") }],
     }
   })
 
@@ -854,7 +854,7 @@ export function Prompt(props: PromptProps) {
         cursorVersion()
         return inputTarget() !== undefined && store.mode === "shell" && input?.visualCursor.offset === 0
       })(),
-      bindings: [{ key: "backspace", desc: "Exit shell mode", group: "Prompt", cmd: () => setStore("mode", "normal") }],
+      bindings: [{ key: "backspace", desc: "退出 Shell 模式", group: "提示", cmd: () => setStore("mode", "normal") }],
     }
   })
 
@@ -868,8 +868,8 @@ export function Prompt(props: PromptProps) {
       commands: [
         {
           name: "prompt.history.previous",
-          title: "Previous prompt history",
-          category: "Prompt",
+          title: "上一条提示历史",
+          category: "提示",
           run() {
             if (input.cursorOffset !== 0) {
               if (input.scrollY + input.visualCursor.visualRow === 0) input.cursorOffset = 0
@@ -900,8 +900,8 @@ export function Prompt(props: PromptProps) {
       commands: [
         {
           name: "prompt.history.next",
-          title: "Next prompt history",
-          category: "Prompt",
+          title: "下一条提示历史",
+          category: "提示",
           run() {
             if (input.cursorOffset !== input.plainText.length) {
               if (
@@ -1012,7 +1012,7 @@ export function Prompt(props: PromptProps) {
         console.log("Creating a session failed:", res.error)
 
         toast.show({
-          message: "Creating a session failed. Open console for more details.",
+          message: "创建会话失败。打开控制台查看详情。",
           variant: "error",
         })
 
@@ -1111,7 +1111,7 @@ export function Prompt(props: PromptProps) {
         )
         .catch((error) => {
           toast.show({
-            title: "Failed to send prompt",
+            title: "发送提示失败",
             message: errorMessage(error),
             variant: "error",
           })
@@ -1207,7 +1207,7 @@ export function Prompt(props: PromptProps) {
       (lineCount >= 3 || pastedContent.length > 150) &&
       kv.get("paste_summary_enabled", !sync.data.config.experimental?.disable_paste_summary)
     ) {
-      pasteText(pastedContent, `[Pasted ~${lineCount} lines]`)
+      pasteText(pastedContent, `[已粘贴约 ${lineCount} 行]`)
       return
     }
 
@@ -1312,10 +1312,10 @@ export function Prompt(props: PromptProps) {
     if (store.mode === "shell") {
       if (!shell().length) return undefined
       const example = shell()[store.placeholder % shell().length]
-      return `Run a command... "${example}"`
+      return `运行命令... "${example}"`
     }
     if (!list().length) return undefined
-    return `Ask anything... "${list()[store.placeholder % list().length]}"`
+    return `随便问... "${list()[store.placeholder % list().length]}"`
   })
 
   const spinnerDef = createMemo(() => {
@@ -1444,7 +1444,7 @@ export function Prompt(props: PromptProps) {
                   {(agent) => (
                     <>
                       <text fg={fadeColor(highlight(), agentMetaAlpha())}>
-                        {store.mode === "shell" ? "Shell" : Locale.titlecase(agent().name)}
+                        {store.mode === "shell" ? "终端" : (() => { const m: Record<string,string> = {plan:"规划",build:"构建",Plan:"规划",Build:"构建"}; return m[agent().name] ?? Locale.titlecase(agent().name); })()}
                       </text>
                       <Show when={store.mode === "normal" && local.permission.mode === "auto"}>
                         <text fg={fadeColor(theme.textMuted, agentMetaAlpha())}>auto</text>
@@ -1557,7 +1557,7 @@ export function Prompt(props: PromptProps) {
                         const r = retry()
                         if (!r) return
                         if (isTruncated()) {
-                          void DialogAlert.show(dialog, "Retry Error", r.message)
+                          void DialogAlert.show(dialog, "重试错误", r.message)
                         }
                       }
 
@@ -1565,7 +1565,7 @@ export function Prompt(props: PromptProps) {
                         const r = retry()
                         if (!r) return ""
                         const baseMessage = message()
-                        const truncatedHint = isTruncated() ? " (click to expand)" : ""
+                        const truncatedHint = isTruncated() ? "（点击展开）" : ""
                         const duration = formatDuration(seconds())
                         const retryInfo = ` [retrying ${duration ? `in ${duration} ` : ""}attempt #${r.attempt}]`
                         return baseMessage + truncatedHint + retryInfo
@@ -1584,7 +1584,7 @@ export function Prompt(props: PromptProps) {
                 <text fg={store.interrupt > 0 ? theme.primary : theme.text}>
                   esc{" "}
                   <span style={{ fg: store.interrupt > 0 ? theme.primary : theme.textMuted }}>
-                    {store.interrupt > 0 ? "again to interrupt" : "interrupt"}
+                    {store.interrupt > 0 ? "再次中断" : "中断"}
                   </span>
                 </text>
               </box>
@@ -1607,16 +1607,16 @@ export function Prompt(props: PromptProps) {
                       const item = label()
                       if (item.type === "new") {
                         if (workspace.creating())
-                          return `Creating ${item.workspaceType}${".".repeat(workspace.creatingDots())}`
+                          return `正在创建 ${item.workspaceType}${".".repeat(workspace.creatingDots())}`
                         return (
                           <>
-                            Workspace <span style={{ fg: theme.textMuted }}>(new {item.workspaceType})</span>
+                            工作区 <span style={{ fg: theme.textMuted }}>（新建 {item.workspaceType}）</span>
                           </>
                         )
                       }
                       return (
                         <>
-                          Workspace <span style={{ fg: theme.textMuted }}>{item.workspaceName}</span>
+                          工作区 <span style={{ fg: theme.textMuted }}>{item.workspaceName}</span>
                         </>
                       )
                     })()}
@@ -1668,17 +1668,17 @@ export function Prompt(props: PromptProps) {
                     </Match>
                     <Match when={true}>
                       <text fg={theme.text}>
-                        {agentShortcut()} <span style={{ fg: theme.textMuted }}>agents</span>
+                        {agentShortcut()} <span style={{ fg: theme.textMuted }}>智能体</span>
                       </text>
                     </Match>
                   </Switch>
                   <text fg={theme.text}>
-                    {paletteShortcut()} <span style={{ fg: theme.textMuted }}>commands</span>
+                    {paletteShortcut()} <span style={{ fg: theme.textMuted }}>命令</span>
                   </text>
                 </Match>
                 <Match when={store.mode === "shell"}>
                   <text fg={theme.text}>
-                    esc <span style={{ fg: theme.textMuted }}>exit shell mode</span>
+                    esc <span style={{ fg: theme.textMuted }}>退出 Shell 模式</span>
                   </text>
                 </Match>
               </Switch>

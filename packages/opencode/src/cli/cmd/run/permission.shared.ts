@@ -103,7 +103,7 @@ export function permissionInfo(request: PermissionRequest): PermissionInfo {
     const dir = raw.includes("*") ? raw.slice(0, raw.indexOf("*")).replace(/[\\/]+$/, "") : raw
     return {
       icon: "←",
-      title: `Access external directory ${toolPath(dir, { home: true })}`,
+      title: `访问外部目录 ${toolPath(dir, { home: true })}`,
       lines: pats.map((item) => `- ${item}`),
     }
   }
@@ -111,35 +111,35 @@ export function permissionInfo(request: PermissionRequest): PermissionInfo {
   if (request.permission === "doom_loop") {
     return {
       icon: "⟳",
-      title: "Continue after repeated failures",
-      lines: ["This keeps the session running despite repeated failures."],
+      title: "持续运行（忽略重复失败）",
+      lines: ["此选项将保持会话运行，即使工具重复失败。"],
     }
   }
 
   return {
     icon: "⚙",
-    title: `Call tool ${request.permission}`,
+    title: `调用工具 ${request.permission}`,
     lines: [`Tool: ${request.permission}`],
   }
 }
 
 export function permissionAlwaysLines(request: PermissionRequest): string[] {
   if (request.always.length === 1 && request.always[0] === "*") {
-    return [`This will allow ${request.permission} until OpenCode is restarted.`]
+    return [`这将允许 ${request.permission} 直到 OpenCode 重启。`]
   }
 
   return [
-    "This will allow the following patterns until OpenCode is restarted.",
+    "此操作将允许以下模式，直至 OpenCode 重新启动。",
     ...request.always.map((item) => `- ${item}`),
   ]
 }
 
 export function permissionLabel(option: PermissionOption): string {
-  if (option === "once") return "Allow once"
-  if (option === "always") return "Allow always"
-  if (option === "reject") return "Reject"
-  if (option === "confirm") return "Confirm"
-  return "Cancel"
+  if (option === "once") return "允许一次"
+  if (option === "always") return "始终允许"
+  if (option === "reject") return "拒绝"
+  if (option === "confirm") return "确认"
+  return "取消"
 }
 
 export function permissionReply(requestID: string, reply: PermissionReply["reply"], message?: string): PermissionReply {

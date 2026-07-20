@@ -179,7 +179,7 @@ export function formatError(error: {
     return error.name
   }
 
-  return "unknown error"
+  return "未知错误"
 }
 
 function isAbort(error: { name?: string } | undefined): boolean {
@@ -230,11 +230,11 @@ export function pickBlockerView(input: { permission?: PermissionRequest; questio
 
 export function blockerStatus(view: FooterView) {
   if (view.type === "permission") {
-    return "awaiting permission"
+    return "等待权限"
   }
 
   if (view.type === "question") {
-    return "awaiting answer"
+    return "等待回答"
   }
 
   return ""
@@ -415,7 +415,7 @@ function toolStatus(part: ToolPart): string {
     return `running ${type.trim()}`
   }
 
-  return "running task"
+  return "运行任务"
 }
 
 // Returns true if we can flush this part's text to scrollback.
